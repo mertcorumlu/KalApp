@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
 
 
@@ -26,7 +27,7 @@ import java.util.concurrent.ExecutionException;
 
 public class ItemOneFragment extends Fragment {
 
-    final List<Duyuru> duyurular=new ArrayList<Duyuru>();
+    final List<Duyuru> duyurular= new ArrayList<>();
 
     public static  ItemOneFragment newInstance() {
         return new  ItemOneFragment();
@@ -46,7 +47,7 @@ public class ItemOneFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragement_item_one,
+        final View rootView = inflater.inflate(R.layout.fragement_item_one,
                 container, false);
 
         DuyuruInfo us=new DuyuruInfo();
@@ -54,7 +55,6 @@ public class ItemOneFragment extends Fragment {
         try {
 
            ar =new JSONArray(us.execute().get());
-            
 
 
         } catch (InterruptedException | ExecutionException | JSONException e) {
@@ -81,17 +81,56 @@ public class ItemOneFragment extends Fragment {
 
         }
 
-        ListView listemiz=rootView.findViewById(R.id.listView1);
+        final ListView listemiz=rootView.findViewById(R.id.listView1);
 
-        DuyuruAdapter adapter=new DuyuruAdapter(getActivity(),duyurular);
+        final DuyuruAdapter adapter=new DuyuruAdapter(getActivity(),duyurular);
 
         listemiz.setAdapter(adapter);
+
+        listemiz.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE
+                        && (listemiz.getLastVisiblePosition() - listemiz.getHeaderViewsCount() -
+                        listemiz.getFooterViewsCount()) >= (adapter.getCount() - 1)) {
+
+                    duyurular.add(new Duyuru(
+                            "asdasdsa",
+                            "asdasda",
+                            "asdasdasd",
+                            "http://10.0.2.2/logo.jpg"
+                    ));
+
+                    System.out.println("asdasdasd");
+                    //duyurular.clear();
+                    duyurular.add(new Duyuru(
+                            "asdasdsa",
+                            "asdasda",
+                            "asdasdasd",
+                            "http://10.0.2.2/logo.jpg"
+                    ));
+
+                    adapter.notifyDataSetChanged();
+
+
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+
 
         return rootView;
 
 
 
+
     }
+
 
 
     private class DuyuruInfo extends AsyncTask<Void, String,String> {
@@ -110,7 +149,7 @@ public class ItemOneFragment extends Fragment {
 
             try{
 
-                String api_call="http://10.0.2.2/include/duyuru.php";
+                String api_call="http://10.0.2.2/include/duyuru.php?s=0&f=10";
 
                 return js.JsonString(api_call);
 
