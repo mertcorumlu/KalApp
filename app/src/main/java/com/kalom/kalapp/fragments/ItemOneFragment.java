@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 
 import com.kalom.kalapp.R;
+import com.kalom.kalapp.classes.Config;
 import com.kalom.kalapp.classes.Duyuru;
 import com.kalom.kalapp.classes.DuyuruAdapter;
 import com.kalom.kalapp.classes.JSONParser;
@@ -26,6 +27,13 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class ItemOneFragment extends Fragment {
+
+    private DuyuruAdapter adapter=null;
+    private DuyuruInfo us;
+    private JSONArray ar ;
+    private JSONObject obj;
+    private int str=0;
+    private int fnsh=Config.duyuru_load_one_time;
 
     final List<Duyuru> duyurular= new ArrayList<>();
 
@@ -49,9 +57,15 @@ public class ItemOneFragment extends Fragment {
 
         final View rootView = inflater.inflate(R.layout.fragement_item_one,
                 container, false);
+        final ListView listemiz=rootView.findViewById(R.id.listView1);
 
-        DuyuruInfo us=new DuyuruInfo();
-        JSONArray ar ;
+        adapter=new DuyuruAdapter(getActivity(),duyurular);
+
+        listemiz.setAdapter(adapter);
+
+
+        us=new DuyuruInfo();
+
         try {
 
            ar =new JSONArray(us.execute().get());
@@ -65,7 +79,7 @@ public class ItemOneFragment extends Fragment {
 
         for(int i=0;i<ar.length();++i){
             try {
-                JSONObject obj=(JSONObject) ar.get(i);
+                 obj=(JSONObject) ar.get(i);
                 duyurular.add(new Duyuru(
                         obj.get("baslik").toString(),
                         obj.get("prebaslik").toString(),
@@ -81,11 +95,9 @@ public class ItemOneFragment extends Fragment {
 
         }
 
-        final ListView listemiz=rootView.findViewById(R.id.listView1);
 
-        final DuyuruAdapter adapter=new DuyuruAdapter(getActivity(),duyurular);
 
-        listemiz.setAdapter(adapter);
+
 
         listemiz.setOnScrollListener(new AbsListView.OnScrollListener() {
 
@@ -95,21 +107,33 @@ public class ItemOneFragment extends Fragment {
                         && (listemiz.getLastVisiblePosition() - listemiz.getHeaderViewsCount() -
                         listemiz.getFooterViewsCount()) >= (adapter.getCount() - 1)) {
 
-                    duyurular.add(new Duyuru(
-                            "asdasdsa",
-                            "asdasda",
-                            "asdasdasd",
-                            "http://10.0.2.2/logo.jpg"
-                    ));
+                    try {
+                        us=new DuyuruInfo();
 
-                    System.out.println("asdasdasd");
-                    //duyurular.clear();
-                    duyurular.add(new Duyuru(
-                            "asdasdsa",
-                            "asdasda",
-                            "asdasdasd",
-                            "http://10.0.2.2/logo.jpg"
-                    ));
+                        ar =new JSONArray(us.execute().get());
+                    } catch (InterruptedException | ExecutionException | JSONException e) {
+                        e.printStackTrace();
+                        return;
+                    }
+
+
+                    for(int i=0;i<ar.length();++i){
+                        try {
+                            obj=(JSONObject) ar.get(i);
+                            duyurular.add(new Duyuru(
+                                    obj.get("baslik").toString(),
+                                    obj.get("prebaslik").toString(),
+                                    obj.get("content").toString(),
+                                    "http://10.0.2.2/logo.jpg"
+                            ));
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            return;
+                        }
+
+                    }
 
                     adapter.notifyDataSetChanged();
 
@@ -137,8 +161,20 @@ public class ItemOneFragment extends Fragment {
 
         private String hash;
 
+
         DuyuruInfo() {
         }
+
+        @Override
+        protected void onPreExecute(){
+            System.out.println("Gönderildi");
+        }
+
+        @Override
+        protected void onPostExecute(String result){
+            System.out.println("Bitti");
+        }
+
 
         @Override
         protected String doInBackground(Void... params) {
@@ -149,8 +185,10 @@ public class ItemOneFragment extends Fragment {
 
             try{
 
-                String api_call="http://10.0.2.2/include/duyuru.php?s=0&f=10";
 
+                String api_call= Config.api_server+"include/duyuru.php?s="+str +"&f="+fnsh;
+                str=fnsh;
+                fnsh+=Config.duyuru_load_one_time;
                 return js.JsonString(api_call);
 
             }catch(IOException | JSONException e){
@@ -159,6 +197,7 @@ public class ItemOneFragment extends Fragment {
 
             return null;
         }
+
 
 
     }

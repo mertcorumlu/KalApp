@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.kalom.kalapp.classes.Config;
 import com.kalom.kalapp.classes.JSONParser;
 import com.kalom.kalapp.classes.SessionManager;
 
@@ -136,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 System.out.println(hash);
-                String api_call="http://10.0.2.2/?action=user_info&hash="+hash;
+                String api_call= Config.api_server+"?action=user_info&hash="+hash;
 
                 return js.readJson(api_call);
 

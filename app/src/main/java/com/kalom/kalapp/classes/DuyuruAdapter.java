@@ -2,6 +2,7 @@ package com.kalom.kalapp.classes;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,10 +58,14 @@ public class DuyuruAdapter extends BaseAdapter {
 
         Duyuru duy=mDuyurular.get(i);
 
-        TextView baslik=(TextView) satir.findViewById(R.id.title);
+
+        TextView baslik= satir.findViewById(R.id.title);
         baslik.setText(duy.getBaslik());
 
-        TextView icerik=(TextView) satir.findViewById(R.id.textView);
+        TextView prebaslik= satir.findViewById(R.id.artist);
+        prebaslik.setText(duy.getCategory());
+
+        TextView icerik= satir.findViewById(R.id.textView);
         icerik.setText(duy.getIcerik());
 
 
