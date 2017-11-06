@@ -68,10 +68,6 @@ public class DuyuruAdapter extends BaseAdapter {
         TextView icerik= satir.findViewById(R.id.textView);
         icerik.setText(duy.getIcerik());
 
-
-
-
-
         return satir;
     }
 }
