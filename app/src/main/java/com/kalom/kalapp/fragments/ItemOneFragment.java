@@ -4,6 +4,7 @@ package com.kalom.kalapp.fragments;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +69,26 @@ public class ItemOneFragment extends Fragment {
 
         us=new DuyuruInfo();
         us.execute();
+
+       final SwipeRefreshLayout swip=rootView.findViewById(R.id.swiperefresh);
+
+        swip.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        duyurular.clear();
+                        adapter.notifyDataSetChanged();
+
+                        us=new DuyuruInfo();
+                        str=0;
+                        fnsh=Config.duyuru_load_one_time;
+                        us.execute();
+                        swip.setRefreshing(false);
+                    }
+                }
+        );
+
+
 
 
         listemiz.setOnScrollListener(new AbsListView.OnScrollListener() {
