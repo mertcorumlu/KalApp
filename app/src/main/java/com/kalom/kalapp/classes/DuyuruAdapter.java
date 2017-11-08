@@ -3,6 +3,10 @@ package com.kalom.kalapp.classes;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,9 +69,33 @@ public class DuyuruAdapter extends BaseAdapter {
         TextView prebaslik= satir.findViewById(R.id.artist);
         prebaslik.setText(duy.getCategory());
 
-        TextView icerik= satir.findViewById(R.id.textView);
-        icerik.setText(duy.getIcerik());
+        final TextView icerik= satir.findViewById(R.id.textView);
+        final String str_icerik=duy.getIcerik();
+
+        if(str_icerik.length()>Config.duyuru_max_uzunluk){
+
+            SpannableString ss = new SpannableString(str_icerik.substring(0,Config.duyuru_max_uzunluk) + ".... Devamını Oku");
+            ClickableSpan span1 = new ClickableSpan() {
+                @Override
+                public void onClick(View textView) {
+                    // do some thing
+                    icerik.setText(str_icerik);
+                }
+            };
+
+
+            ss.setSpan(span1, Config.duyuru_max_uzunluk+4, Config.duyuru_max_uzunluk+17, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            icerik.setText(ss);
+            icerik.setMovementMethod(LinkMovementMethod.getInstance());
+           // icerik.setText(str_icerik.substring(0,10) + "....");
+        }else{
+            icerik.setText(str_icerik);
+        }
+
 
         return satir;
     }
+
+
 }

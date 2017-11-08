@@ -6,4 +6,6 @@ public class Config {
 
 
     public static int duyuru_load_one_time=5;
+    public static int duyuru_max_uzunluk=50;
+
 }

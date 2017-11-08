@@ -47,8 +47,6 @@ public class ItemOneFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
     }
 
 
@@ -71,6 +69,7 @@ public class ItemOneFragment extends Fragment {
         us.execute();
 
        final SwipeRefreshLayout swip=rootView.findViewById(R.id.swiperefresh);
+
 
         swip.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
