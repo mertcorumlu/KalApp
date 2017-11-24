@@ -22,10 +22,9 @@ public class MainPage extends AppCompatActivity {
         setContentView(R.layout.mainpage_layout);
 
 
-        BottomNavigationView bottomNavigationView = (BottomNavigationView)
-                findViewById(R.id.navigation);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -39,29 +38,30 @@ public class MainPage extends AppCompatActivity {
                         switch (item.getItemId()) {
 
                             case R.id.action_item1:
-
                                 if(frag1!=null){
                                     selectedFragment=frag1;
                                 }else{
                                     frag1=ItemOneFragment.newInstance();
                                     selectedFragment = frag1;
                                 }
-
                                 break;
 
-                            case R.id.action_item2:
 
+                            case R.id.action_item2:
                                 if(frag2!=null){
                                     selectedFragment=frag2;
                                 }else{
                                     frag2=ItemOneFragment.newInstance();
                                     selectedFragment = frag2;
                                 }
-
                                 break;
+
+
                             case R.id.action_item3:
                                 selectedFragment = ItemOneFragment.newInstance();
                                 break;
+
+
 
                             case R.id.action_item4:
                                 selectedFragment = ItemOneFragment.newInstance();

@@ -2,6 +2,7 @@ package com.kalom.kalapp.classes;
 
 import java.util.HashMap;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,13 +14,10 @@ public class SessionManager {
     SharedPreferences pref;
 
     // Editor for Shared preferences
-    Editor editor;
+    public Editor editor;
 
     // Context
-    Context _context;
-
-    // Shared pref mode
-    int PRIVATE_MODE = 0;
+    private Context _context;
 
     // Sharedpref file name
     private static final String PREF_NAME = "KALSESSION";
@@ -28,12 +26,14 @@ public class SessionManager {
     private static final String IS_LOGIN = "IsLoggedIn";
 
     // User name (make variable public to access from outside)
-    public static final String KEY_TOKEN = "0";
+    private static final String KEY_TOKEN = "0";
 
 
     // Constructor
+    @SuppressLint("CommitPrefEdits")
     public SessionManager(Context context){
         this._context = context;
+        int PRIVATE_MODE = 0;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
     }
@@ -93,9 +93,8 @@ public class SessionManager {
      * Get stored token
      * */
     public String getToken(){
-        String user = pref.getString(KEY_TOKEN, null);
         // return user
-        return user;
+        return pref.getString(KEY_TOKEN, null);
     }
 
     /**

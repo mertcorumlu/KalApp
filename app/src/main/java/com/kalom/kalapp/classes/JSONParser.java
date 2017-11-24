@@ -36,7 +36,7 @@ public class JSONParser {
 
         HttpURLConnection huc = (HttpURLConnection) ur.openConnection();
         HttpURLConnection.setFollowRedirects(false);
-        huc.setConnectTimeout(200);
+        huc.setConnectTimeout(60);
         huc.connect();
         InputStream is = huc.getInputStream();
         InputStreamReader isr = new InputStreamReader(is, Charset.forName("UTF-8"));
@@ -46,17 +46,6 @@ public class JSONParser {
         is.close();
         return json;
 
-
-
-        /*
-            InputStream is = new URL (url).openStream();
-            InputStreamReader isr = new InputStreamReader(is, Charset.forName("UTF-8"));
-            BufferedReader rd = new BufferedReader(isr);
-            String jsonText = readAll(rd);
-            JSONObject json = new JSONObject(jsonText);
-            is.close();
-            return json;
-*/
 
     }
 

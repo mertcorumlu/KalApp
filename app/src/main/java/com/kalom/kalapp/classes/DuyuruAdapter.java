@@ -24,6 +24,7 @@ public class DuyuruAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private List<Duyuru> mDuyurular;
+    private boolean isopened;
 
     public DuyuruAdapter(Activity activity,List<Duyuru> duyurular){
 
@@ -72,8 +73,9 @@ public class DuyuruAdapter extends BaseAdapter {
         final TextView icerik= satir.findViewById(R.id.textView);
         final String str_icerik=duy.getIcerik();
 
-        if(str_icerik.length()>Config.duyuru_max_uzunluk){
+        /*
 
+        if(str_icerik.length()>Config.duyuru_max_uzunluk){
             SpannableString ss = new SpannableString(str_icerik.substring(0,Config.duyuru_max_uzunluk) + ".... Devamını Oku");
             ClickableSpan span1 = new ClickableSpan() {
                 @Override
@@ -91,9 +93,9 @@ public class DuyuruAdapter extends BaseAdapter {
            // icerik.setText(str_icerik.substring(0,10) + "....");
         }else{
             icerik.setText(str_icerik);
-        }
+        }*/
 
-
+        icerik.setText(str_icerik);
         return satir;
     }
 

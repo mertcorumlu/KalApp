@@ -1,6 +1,7 @@
 package com.kalom.kalapp;
 
-import android.content.Context;
+
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 
 import android.os.AsyncTask;
@@ -11,7 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 
-import android.widget.Toast;
+import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.kalom.kalapp.classes.Config;
@@ -31,14 +32,36 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //API 19 İçin Vector Background Eklentisi
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
+        //Push Notification İçin Token Çağırma
         FirebaseInstanceId.getInstance().getToken();
 
+        //Shared Preferences İçinde Tutulacak Olan Login Hash İçin Kütüphane
         SessionManager session = new SessionManager(getApplicationContext());
 
+
+        /**
+         *Eğer Login Hash Kayıtlı Değilse Daha Önce Hiç Giriş Yapılmamıştır.
+         * Bu Durumda Login Ekranına Yönlendir.
+         */
+            if(session.getToken()==null){
+                Log.d("MESAJ","Giriş Yapılmamış. " + session.getToken());
+
+                Intent intent = new Intent(MainActivity.this, Login_Activity.class);
+                startActivity(intent);
+                finish();
+                return;
+            }
+
         try{
+
+            //Login Hash İle Sunucuya Sorgu Yolla.
             UserInfo us=new UserInfo(session.getToken());
 
+            //Suncudan Gelen Cevabı JSONObject Olarak Değişkene Aktar
             JSONObject info = us.execute().get();
 
 
@@ -46,16 +69,10 @@ public class MainActivity extends AppCompatActivity {
 
                 assert session.getToken()!=null;
 
-
-                if(info==null){
-                    //System.out.println("Sunucuya Ulaşılamadı.");
-
-                    Context context = getApplicationContext();
-                    CharSequence text = "Sunucuya Ulaşılamıyor Lütfen Daha Sonra Tekrar Deneyin!";
-                    int duration = Toast.LENGTH_LONG;
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
-
+                /**
+                 *Eğer Sunucuya Ulaşılamadıysa, Bir Alert Dialog Oluştur ve Kullanıcıyı Bilgilendir.
+                 */
+                if(info==null) {
 
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivity.this);
                     builder1.setMessage("Sunucuya Şu Anda Erişilemiyor.");
@@ -79,9 +96,15 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
+
+                /**
+                 *Suncudan Gelen Verileri Kontrol Et.
+                 *Eğer Sunucu Login Hashi Onaylamışsa Ana Ekrana Yönlendir.
+                 * Eğer Login Hashin Süresi Dolmuşsa Oturumu Zaman Aşımına Uğrat.Logine Yönlendir.
+                 */
                 if(info.get("valid").equals(true)){
 
-                    System.out.println("Giriş yapılmış ana ekrana yönlendiriliyor");
+                    Log.d("MESAJ","Giriş Yapılmış.Ana Ekrana Yönlendiriyor");
 
                     Intent intent = new Intent(MainActivity.this, MainPage.class);
                     intent.putExtra("UserData", info.toString());
@@ -89,10 +112,28 @@ public class MainActivity extends AppCompatActivity {
                     finish();
 
                 }else{
-                    System.out.println("Giriş yapılmamış logine yönlendiriyor.");
-                    Intent intent = new Intent(MainActivity.this, Login_Activity.class);
-                    startActivity(intent);
-                    finish();
+                    Log.d("MESAJ","Oturum Sona Ermiş.");
+                    session.editor.clear().commit();
+
+
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivity.this);
+                    builder1.setMessage("Başka Bir Cihazdan Giriş Yaptığın İçin Bu Oturumuna Kısa Bir Ara Veriyoruz :)");
+                    builder1.setCancelable(true);
+
+                    builder1.setPositiveButton(
+                            "Tamam",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent intent = new Intent(MainActivity.this, Login_Activity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            });
+
+
+
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
 
                 }
 
@@ -102,17 +143,25 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
-
         }catch (InterruptedException | ExecutionException e){
+                /**
+                 *Sunucyla Bağlantı Sağlanamdığını Konsola Yaz
+                 */
             e.getMessage();
-            System.out.println("Başarısız");
+            Log.d("MESAJ","Sunucudan Alınan Bilgiler Alınırken Bir Hata Oluştu..");
         }
 
     }
 
 
 
+    @SuppressLint("StaticFieldLeak")
     private class UserInfo extends AsyncTask<Void, String,JSONObject> {
+        /**
+         * Bu class sunucudan verileri çeker.Async Task olarak kodlanmıştır.
+         * Parametre olarak login hash alması gerekir.
+         * bağlantı kuramazsa null döndürür
+         */
 
         private String hash;
 
@@ -123,21 +172,25 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected JSONObject doInBackground(Void... params) {
 
-            // Simulate network access.
+            // yeni bir json parser değişkeni
             JSONParser js=new JSONParser();
 
             try{
 
-
-               // System.out.println(hash);
+                //login kontrol etmek için sunucuya yapılması gereken istek
                 String api_call= Config.api_server+"?action=user_info&hash="+hash;
 
+                //JSONParser kütüphanesi ile sunucuya istek yollanır.
+                //Yanıt olarak JSONObject döner
                 return js.readJson(api_call);
 
             }catch(IOException | JSONException e){
+
+                //eğer sunucuyla bağlantı sağlanamazsa AsyncTask null döndürür.
                 e.getMessage();
-                System.out.println("ALINAMADI");
+                Log.d("MESAJ","Kullanıcı Bilgileri Sunucudan Alınamadı.");
                 return null;
+
             }
         }
 

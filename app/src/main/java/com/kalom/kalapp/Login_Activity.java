@@ -1,19 +1,15 @@
 package com.kalom.kalapp;
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
 import android.content.CursorLoader;
@@ -23,10 +19,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 
 import android.os.Build;
-//import android.os.Bundle;
 import android.provider.ContactsContract;
-//import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -50,8 +45,8 @@ import org.json.JSONObject;
 
 import com.kalom.kalapp.classes.SessionManager;
 
-import static android.Manifest.permission.READ_CONTACTS;
 import	android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 /**
  * A login screen that offers login via email/password.
@@ -61,7 +56,7 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
     /**
      * Id to identity READ_CONTACTS permission request.
      */
-    private static final int REQUEST_READ_CONTACTS = 0;
+   // private static final int REQUEST_READ_CONTACTS = 0;
 
 
     /**
@@ -85,10 +80,10 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
 
 
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.okul_no);
+        mEmailView = findViewById(R.id.okul_no);
         populateAutoComplete();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView = findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -100,7 +95,7 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mEmailSignInButton = findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,46 +109,7 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
     }
 
     private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
-
         getLoaderManager().initLoader(0, null, this);
-    }
-
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
-            }
-        }
     }
 
 
@@ -248,8 +204,10 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
         });
     }
 
+
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        /*
         return new CursorLoader(this,
                 // Retrieve data rows for the device user's 'profile' contact.
                 Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
@@ -262,11 +220,13 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
 
                 // Show primary email addresses first. Note that there won't be
                 // a primary email address if the user hasn't specified one.
-                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
+                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");*/
+        return null;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        /*
         List<String> emails = new ArrayList<>();
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -274,7 +234,7 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
             cursor.moveToNext();
         }
 
-        addEmailsToAutoComplete(emails);
+        addEmailsToAutoComplete(emails);*/
     }
 
     @Override
@@ -292,6 +252,7 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
     }
 
 
+    /*
     private interface ProfileQuery {
         String[] PROJECTION = {
                 ContactsContract.CommonDataKinds.Email.ADDRESS,
@@ -299,13 +260,15 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
         };
 
         int ADDRESS = 0;
-        int IS_PRIMARY = 1;
-    }
+       // int IS_PRIMARY = 1;
+    }*/
 
-    public void hideSoftKeyboard() {
+    private void hideSoftKeyboard() {
         if(getCurrentFocus()!=null) {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            if (inputMethodManager != null) {
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
         }
     }
 
@@ -313,11 +276,17 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
+    @SuppressLint("StaticFieldLeak")
     private class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+
+        /**
+         *Giriş yaptırmak için yazılan AsyncTask Sınıfı.
+         */
 
         private final String mEmail;
         private final String mPassword;
         private  String error;
+        private boolean isInternetDown;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -330,35 +299,47 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
         protected Boolean doInBackground(Void... params) {
 
 
-                // Simulate network access.
+            //sunucyla bağlantı kuramazsa true döndürür
+            isInternetDown=false;
+
+            //veri almak için JSONParser kütüphanesi
             JSONParser js=new JSONParser();
 
             try{
-                Thread.sleep(1);
-                /*
-                 *Login Datalarını Dinamikleştir.Hata Mesajlarını özelleştir.
-                 */
 
-
+                //giriş yapmak için sunucuya yollanan sorgu
                 String api_call= Config.api_server+"?action=login&okul_no="+mEmail+"&pass="+mPassword;
                 System.out.println(api_call);
+
+                //sunucudan gelen veriyi JSONObject e aktardık
                JSONObject LoginCallback = js.readJson(api_call);
 
 
+               //Eğer sunucudan cevap olarak error=false gelirse,kullanıcın sağladığı bilgiler doğrudur.Giriş Yaptırılır.
                 if(LoginCallback.get("error").equals("false")){
 
+                    //Kullanıcın Login Hash i Shared Preferences e kaydedilir.
                     SessionManager session = new SessionManager(getApplicationContext());
                     session.createLoginSession( (String) LoginCallback.get("hash") );
 
                     return true;
                 }else{
+                    /**
+                     *Eğer Error=true dönmüşse kullanıcın verdiği bilgiler yanlıştır.Sunucudan gelen error mesajını @error değişkenine aktar.
+                     */
                     error=(String) LoginCallback.get("message");
                     return false;
                 }
 
 
-            }catch(IOException | JSONException | InterruptedException e){
+            }catch(IOException | JSONException e){
                 e.getMessage();
+
+                //Sunucuya ulaşılamamıştır.@isInternetDown değişkenini true olarak değiştir.
+                isInternetDown=true;
+
+                Log.d("MESAJ","Kullanıcı Bilgileri Sunucudan Alınamadı.");
+
             }
 
             return false;
@@ -368,15 +349,49 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
 
         @Override
         protected void onPostExecute(final Boolean success) {
+
+            /**
+             *İşlem çalıştırıldıktan sonra gelen cevapları kontrol Eder.
+             * Gelen cevaplara göre giriş işlemini gerkeçkleştirir.
+             */
+
+            //form sıfırlanır
             mAuthTask = null;
-            showProgress(false);
+
+
+            /**
+             *Eğer sunucuya ulaşılamamışsa Toast mesajı ile kullanıcı bilgilendirilir.
+             * Herhangi bir işlem Yapılmaz.
+             */
+            if(isInternetDown){
+                showProgress(false);
+                Toast tost= Toast.makeText(getApplicationContext(),"Sunucularımız Şu Anda Hizmet Veremiyor. Lütfen Birkaç Dakika Sonra Tekrar Deneyin.",Toast.LENGTH_LONG);
+                tost.show();
+                return;
+            }
+
+
 
                 if (success) {
+
+                /**
+                 *Eğer Sunucudan Error=false dönmüşse giriş yapılmış demektir.
+                 * Ana Ekrana Yönlendir.
+                 */
+
                     System.out.println("Giriş Yapıldı Yönlendiriliyor.");
                     Intent intent = new Intent(Login_Activity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
+
+
                 } else {
+                /**
+                 *Daha Önce @error değişkenine aktarılan hata yazısını @mPasswordView değişkeni üzerinden kullanıcıya göster
+                 */
+
+                    //loaderı gizle
+                    showProgress(false);
                     mEmailView.setError("");
                     mPasswordView.setError(error);
                     mPasswordView.setText("");

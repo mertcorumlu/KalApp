@@ -14,7 +14,9 @@
         android:layout_centerHorizontal="true"
         android:background="@drawable/duyuru_background"
         android:orientation="horizontal"
-        android:padding="25dp">
+        android:padding="25dp"
+        android:layout_margin="3dp"
+        >
 
         <RelativeLayout
             android:id="@+id/test"

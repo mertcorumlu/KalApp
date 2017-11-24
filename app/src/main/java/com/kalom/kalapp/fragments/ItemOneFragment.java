@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,7 @@ public class ItemOneFragment extends Fragment {
 
          final View rootView = inflater.inflate(R.layout.fragement_item_one,
                 container, false);
+
           listemiz=rootView.findViewById(R.id.listView1);
           loader_view = ((LayoutInflater) getContext().getSystemService(MainActivity.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.footer_layout, null, false);
           listemiz.setSmoothScrollbarEnabled(true);
@@ -142,7 +144,33 @@ public class ItemOneFragment extends Fragment {
         }
 
         @Override
+        protected String doInBackground(Void... params) {
+
+
+            // Simulate network access.
+            JSONParser js=new JSONParser();
+
+            try{
+
+                String api_call= Config.api_server+"include/duyuru.php?s="+str +"&f="+fnsh;
+                str=fnsh;
+                fnsh+=Config.duyuru_load_one_time;
+                return js.JsonString(api_call);
+
+            }catch(IOException | JSONException e){
+                e.getMessage();
+
+            }
+            return null;
+        }
+
+        @Override
         protected void onPostExecute(String result){
+
+            if(result==null){
+                Log.d("MESAJ","Sunucudan Bilgiler Alınamadı.");
+                return;
+            }
 
             try {
 
@@ -179,26 +207,7 @@ public class ItemOneFragment extends Fragment {
         }
 
 
-        @Override
-        protected String doInBackground(Void... params) {
 
-
-            // Simulate network access.
-            JSONParser js=new JSONParser();
-
-            try{
-
-                String api_call= Config.api_server+"include/duyuru.php?s="+str +"&f="+fnsh;
-                str=fnsh;
-                fnsh+=Config.duyuru_load_one_time;
-                return js.JsonString(api_call);
-
-            }catch(IOException | JSONException e){
-                e.getMessage();
-            }
-
-            return null;
-        }
 
 
 
