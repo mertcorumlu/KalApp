@@ -2,7 +2,8 @@ package com.kalom.kalapp.classes;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+
+import android.support.v7.app.AppCompatDelegate;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -15,7 +16,6 @@ import android.widget.TextView;
 
 import com.kalom.kalapp.R;
 
-import org.w3c.dom.Text;
 
 import java.util.List;
 

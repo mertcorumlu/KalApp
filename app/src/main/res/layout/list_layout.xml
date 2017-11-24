@@ -1,97 +1,93 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
     android:orientation="horizontal"
 
     >
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="@drawable/duyuru_bg"
-    android:layout_marginTop="3dp"
-    android:layout_marginBottom="2dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginLeft="10dp"
-    android:padding="25dip"
-    android:id="@+id/relativeLayout"
-    >
 
-    <RelativeLayout
-        android:id="@+id/test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-    <!--  ListRow Left sied Thumbnail image -->
-    <LinearLayout android:id="@+id/thumbnail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="3dip"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginRight="5dip"
-        android:layout_marginEnd="5dip"
-
-
-        >
-
-        <ImageView
-            android:id="@+id/list_image"
-            android:layout_width="50dip"
-            android:layout_height="50dip"
-            android:src="@drawable/l1"
-            />
-
-    </LinearLayout>
-
-    <!-- Title Of Song-->
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/thumbnail"
-        android:layout_toRightOf="@+id/thumbnail"
-        android:text="Öğrenci Meclisi"
-        android:textColor="#040404"
-        android:typeface="sans"
-        android:textSize="18dip"
-        android:textStyle="bold"/>
-
-    <!-- Artist Name -->
-    <TextView
-        android:id="@+id/artist"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/title"
-        android:textColor="#343434"
-        android:textSize="10dip"
-        android:layout_marginTop="1dip"
-        android:layout_toRightOf="@+id/thumbnail"
-        android:text="Polar Dağıtımı" />
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/textView"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="50dp"
-        android:layout_margin="5dp"
-        android:text="Bu bi Deneme Yazsıdır ananı sikeyim.sdıldskfjsdklsdklfskdlfmdsklm"
-        android:textSize="16dp"
-        android:layout_below="@+id/test"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/duyuru_background"
+        android:orientation="horizontal"
+        android:padding="25dp">
+
+        <RelativeLayout
+            android:id="@+id/test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
 
+            <LinearLayout
+                android:id="@+id/thumbnail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:padding="3dp"
+
+                >
+
+                <ImageView
+                    android:id="@+id/list_image"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/description"
+                    android:src="@drawable/l1" />
+
+            </LinearLayout>
 
 
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/thumbnail"
+                android:layout_toEndOf="@+id/thumbnail"
+                android:layout_toRightOf="@+id/thumbnail"
+
+                android:textColor="#040404"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:typeface="sans" />
 
 
+            <TextView
+                android:id="@+id/artist"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title"
+                android:layout_marginTop="1dp"
+                android:layout_toEndOf="@+id/thumbnail"
+                android:layout_toRightOf="@+id/thumbnail"
+                android:textColor="#343434"
+                android:textSize="12sp"
 
-</RelativeLayout>
+                />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/test"
+            android:layout_margin="5dp"
+            android:minHeight="50dp"
+            android:textSize="16sp" />
+
+
+    </RelativeLayout>
+
+
 
 
 </RelativeLayout>

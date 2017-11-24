@@ -2,22 +2,18 @@ package com.kalom.kalapp;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Point;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
+import android.support.v7.app.AppCompatDelegate;
+
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.kalom.kalapp.classes.Config;
 import com.kalom.kalapp.classes.JSONParser;
 import com.kalom.kalapp.classes.SessionManager;
@@ -26,22 +22,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+        FirebaseInstanceId.getInstance().getToken();
 
-
-  SessionManager session = new SessionManager(getApplicationContext());
+        SessionManager session = new SessionManager(getApplicationContext());
 
         try{
             UserInfo us=new UserInfo(session.getToken());
@@ -55,14 +48,14 @@ public class MainActivity extends AppCompatActivity {
 
 
                 if(info==null){
-                    System.out.println("Sunucuya Ulaşılamadı.");
-                    /*
+                    //System.out.println("Sunucuya Ulaşılamadı.");
+
                     Context context = getApplicationContext();
                     CharSequence text = "Sunucuya Ulaşılamıyor Lütfen Daha Sonra Tekrar Deneyin!";
                     int duration = Toast.LENGTH_LONG;
                     Toast toast = Toast.makeText(context, text, duration);
                     toast.show();
-                    */
+
 
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivity.this);
                     builder1.setMessage("Sunucuya Şu Anda Erişilemiyor.");
@@ -73,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     finish();
+                                    System.exit(0);
                                 }
                             });
 
@@ -114,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("Başarısız");
         }
 
-
     }
 
 
@@ -136,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
             try{
 
 
-                System.out.println(hash);
+               // System.out.println(hash);
                 String api_call= Config.api_server+"?action=user_info&hash="+hash;
 
                 return js.readJson(api_call);

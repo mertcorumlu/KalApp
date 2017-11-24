@@ -27,6 +27,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_main">MainActivity</string>
 
+    <string name="description">List İmage</string>
 
     <!-- CONFIG-->
     <string name="api_url">http://10.0.2.2/</string>

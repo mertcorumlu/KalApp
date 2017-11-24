@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.kalom.kalapp.classes.Config;
 import com.kalom.kalapp.classes.JSONParser;
 
 import org.json.JSONException;
@@ -339,7 +340,7 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
                  */
 
 
-                String api_call=getString(R.string.api_url)+"?action=login&okul_no="+mEmail+"&pass="+mPassword;
+                String api_call= Config.api_server+"?action=login&okul_no="+mEmail+"&pass="+mPassword;
                 System.out.println(api_call);
                JSONObject LoginCallback = js.readJson(api_call);
 
