@@ -1,5 +1,7 @@
 package com.kalom.kalapp;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -11,6 +13,9 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.kalom.kalapp.classes.Duyuru;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -34,14 +39,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // messages. For more see: https://firebase.google.com/docs/cloud-messaging/concept-options
         // [END_EXCLUDE]
 
+        // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
-
 
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-            sendNotification(remoteMessage.getNotification().getBody());
+            sendNotification(remoteMessage.getNotification().getBody(),remoteMessage.getNotification().getTitle());
+
+            EventBus.getDefault().post("TEST");
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM
@@ -49,30 +56,38 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
     // [END receive_message]
 
-    /**
-     * Create and show a simple notification containing the received FCM message.
-     *
-     * @param messageBody FCM message body received.
-     */
-    private void sendNotification(String messageBody) {
+
+    private void sendNotification(String messageBody,String messageTitle) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
-        String channelId = "MERT";
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel notifychannel=new NotificationChannel("DEFAULT","OM",NotificationManager.IMPORTANCE_MAX);
+            notifychannel.canShowBadge();
+            notifychannel.setShowBadge(true);
+            notifychannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(notifychannel);
+            }
+        }
+
+        String channelId = "DEFAULT";
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("KalApp")
+                        .setContentTitle(messageTitle)
                         .setContentText(messageBody)
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);
 
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }

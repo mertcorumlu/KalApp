@@ -132,6 +132,10 @@ public class ItemOneFragment extends Fragment {
 
     }
 
+    public void scrolltoTop(){
+        listemiz.smoothScrollToPosition(0);
+    }
+
 
 
     private class DuyuruInfo extends AsyncTask<Void, String,String> {

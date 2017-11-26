@@ -12,14 +12,11 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
 
-import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 
 import android.os.Build;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -34,9 +31,9 @@ import android.widget.TextView;
 import android.view.WindowManager;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.kalom.kalapp.classes.Config;
 import com.kalom.kalapp.classes.JSONParser;
 
@@ -306,9 +303,8 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
             JSONParser js=new JSONParser();
 
             try{
-
                 //giriş yapmak için sunucuya yollanan sorgu
-                String api_call= Config.api_server+"?action=login&okul_no="+mEmail+"&pass="+mPassword;
+                String api_call= Config.api_server+"?action=login&okul_no="+mEmail+"&pass="+mPassword+"&fcms_token="+ FirebaseInstanceId.getInstance().getToken();
                 System.out.println(api_call);
 
                 //sunucudan gelen veriyi JSONObject e aktardık

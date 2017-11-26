@@ -4,9 +4,13 @@ package com.kalom.kalapp;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 
+
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.content.Intent;
+
+import android.support.annotation.RequiresApi;
 
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +18,6 @@ import android.support.v7.app.AppCompatDelegate;
 
 import android.util.Log;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.kalom.kalapp.classes.Config;
 import com.kalom.kalapp.classes.JSONParser;
 import com.kalom.kalapp.classes.SessionManager;
@@ -29,6 +32,7 @@ import java.util.concurrent.ExecutionException;
 public class MainActivity extends AppCompatActivity {
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,12 +40,8 @@ public class MainActivity extends AppCompatActivity {
         //API 19 İçin Vector Background Eklentisi
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
-        //Push Notification İçin Token Çağırma
-        FirebaseInstanceId.getInstance().getToken();
-
         //Shared Preferences İçinde Tutulacak Olan Login Hash İçin Kütüphane
         SessionManager session = new SessionManager(getApplicationContext());
-
 
         /**
          *Eğer Login Hash Kayıtlı Değilse Daha Önce Hiç Giriş Yapılmamıştır.
