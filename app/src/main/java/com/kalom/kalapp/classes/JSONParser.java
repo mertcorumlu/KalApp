@@ -1,9 +1,8 @@
 package com.kalom.kalapp.classes;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.util.Log;
+
+
+import android.net.http.HttpsConnection;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 
 public class JSONParser {
@@ -29,14 +29,16 @@ public class JSONParser {
         return (String) json.get(Key);
     }
 
-    public JSONObject readJson(String url) throws IOException, JSONException {
+    /*
+    public JSONObject readJson(String url) throws JSONException, IOException {
 
 
         URL ur = new URL(url);
 
         HttpURLConnection huc = (HttpURLConnection) ur.openConnection();
         HttpURLConnection.setFollowRedirects(false);
-        huc.setConnectTimeout(60);
+        huc.setConnectTimeout( 2 * 1000);
+        huc.setReadTimeout(2 * 1000);
         huc.connect();
         InputStream is = huc.getInputStream();
         InputStreamReader isr = new InputStreamReader(is, Charset.forName("UTF-8"));
@@ -44,10 +46,40 @@ public class JSONParser {
         String jsonText = readAll(rd);
         JSONObject json = new JSONObject(jsonText);
         is.close();
+        if(huc.getResponseCode()!= HttpURLConnection.HTTP_OK){
+            throw new IOException();
+        }
+        return json;
+
+
+    }*/
+
+    public JSONObject readJson(String url) throws JSONException, IOException {
+
+
+        URL ur = new URL(url);
+
+        // given a url open a connection
+        URLConnection c = ur.openConnection();
+
+        // set the connection timeout to 5 seconds
+        c.setConnectTimeout(10*1000);
+        c.setReadTimeout(10*1000);
+        c.setUseCaches(false);
+
+
+        InputStream is = c.getInputStream();
+        InputStreamReader isr = new InputStreamReader(is, Charset.forName("UTF-8"));
+        BufferedReader rd = new BufferedReader(isr);
+        String jsonText = readAll(rd);
+        JSONObject json = new JSONObject(jsonText);
+        is.close();
+
         return json;
 
 
     }
+
 
     public String JsonString(String url) throws IOException, JSONException {
         InputStream is = new URL (url).openStream();

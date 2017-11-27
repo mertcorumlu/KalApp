@@ -1,16 +1,24 @@
 package com.kalom.kalapp.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import com.kalom.kalapp.MainActivity;
 import com.kalom.kalapp.R;
@@ -33,10 +41,13 @@ public class ItemOneFragment extends Fragment {
     private DuyuruAdapter adapter=null;
     private DuyuruInfo us;
     private ListView listemiz;
-    private View loader_view;
-    private int loader_ind;
+    private View list_footer_view;
+    private CoordinatorLayout coordinatorLayout;
+    private SwipeRefreshLayout swip;
+
     private int str=0;
     private int fnsh=Config.duyuru_load_one_time;
+    public boolean refreshed=false;
 
     final List<Duyuru> duyurular= new ArrayList<>();
 
@@ -47,6 +58,9 @@ public class ItemOneFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
 
     }
 
@@ -60,8 +74,12 @@ public class ItemOneFragment extends Fragment {
                 container, false);
 
           listemiz=rootView.findViewById(R.id.listView1);
-          loader_view = ((LayoutInflater) getContext().getSystemService(MainActivity.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.footer_layout, null, false);
-          listemiz.setSmoothScrollbarEnabled(true);
+          list_footer_view = ((LayoutInflater) getContext().getSystemService(MainActivity.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.list_footer, null, false);
+
+            swip=rootView.findViewById(R.id.swiperefresh);
+
+
+       // listemiz.setSmoothScrollbarEnabled(true);
 
         adapter=new DuyuruAdapter(getActivity(),duyurular);
         listemiz.setAdapter(adapter);
@@ -70,21 +88,16 @@ public class ItemOneFragment extends Fragment {
         us=new DuyuruInfo();
         us.execute();
 
-       final SwipeRefreshLayout swip=rootView.findViewById(R.id.swiperefresh);
+
 
 
         swip.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        duyurular.clear();
-                        adapter.notifyDataSetChanged();
-
-                        us=new DuyuruInfo();
-                        str=0;
-                        fnsh=Config.duyuru_load_one_time;
-                        us.execute();
+                        refresh();
                         swip.setRefreshing(false);
+
                     }
                 }
         );
@@ -106,6 +119,16 @@ public class ItemOneFragment extends Fragment {
                     us.execute();
 
                 }
+
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE
+                        &&listemiz.getFirstVisiblePosition() == 0 && refreshed) {
+
+                    refresh();
+                    listemiz.setSelection(0);
+                    refreshed=false;
+                }
+
+
             }
 
             @Override
@@ -120,24 +143,41 @@ public class ItemOneFragment extends Fragment {
     }
 
     protected void showloader(){
-        listemiz.addFooterView(loader_view);
-        listemiz.setSelection(listemiz.getLastVisiblePosition());
+        listemiz.addFooterView(list_footer_view);
+        //listemiz.setSelection(listemiz.getLastVisiblePosition());
         listemiz.setEnabled(false);
+        swip.setEnabled(false);
+
+
 
     }
 
     protected void hideloader(){
-        listemiz.removeFooterView(loader_view);
+        listemiz.removeFooterView(list_footer_view);
         listemiz.setEnabled(true);
+        swip.setEnabled(true);
+
 
     }
 
     public void scrolltoTop(){
+
         listemiz.smoothScrollToPosition(0);
+
+    }
+
+    public void refresh(){
+        duyurular.clear();
+        adapter.notifyDataSetChanged();
+        us=new DuyuruInfo();
+        str=0;
+        fnsh=Config.duyuru_load_one_time;
+        us.execute();
     }
 
 
 
+    @SuppressLint("StaticFieldLeak")
     private class DuyuruInfo extends AsyncTask<Void, String,String> {
 
         @Override
@@ -161,18 +201,21 @@ public class ItemOneFragment extends Fragment {
                 fnsh+=Config.duyuru_load_one_time;
                 return js.JsonString(api_call);
 
+
+
             }catch(IOException | JSONException e){
                 e.getMessage();
-
+                return null;
             }
-            return null;
         }
 
         @Override
         protected void onPostExecute(String result){
-
+            hideloader();
             if(result==null){
-                Log.d("MESAJ","Sunucudan Bilgiler Alınamadı.");
+
+                Toast.makeText(getContext(),"INTERNET YOK",Toast.LENGTH_LONG).show();
+
                 return;
             }
 
@@ -194,6 +237,7 @@ public class ItemOneFragment extends Fragment {
 
                     } catch (JSONException e) {
                         e.printStackTrace();
+
                         return;
                     }
 
@@ -207,7 +251,7 @@ public class ItemOneFragment extends Fragment {
             }
 
 
-            hideloader();
+
         }
 
 

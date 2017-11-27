@@ -48,7 +48,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
             sendNotification(remoteMessage.getNotification().getBody(),remoteMessage.getNotification().getTitle());
 
-            EventBus.getDefault().post("TEST");
+            EventBus.getDefault().post("YENİ DUYURU VAR");
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM

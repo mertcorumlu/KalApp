@@ -30,6 +30,8 @@ import com.kalom.kalapp.fragments.*;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.ListView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -37,6 +39,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public  class MainPage extends AppCompatActivity {
@@ -49,12 +52,23 @@ public  class MainPage extends AppCompatActivity {
     public void onEvent(String d) {
         Log.d("MESAJ","BOTTOM ŞEYSİ DEĞİŞTİ");
 
-       bottomNavigationView.post(new Runnable() {
-           @Override
-           public void run() {
-               bottomNavigationView.getMenu().findItem(R.id.action_item1).setIcon(R.mipmap.marti);
-           }
-       });
+        switch(d){
+
+                case "YENİ DUYURU VAR" :
+
+                    bottomNavigationView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            bottomNavigationView.getMenu().findItem(R.id.action_item1).setIcon(R.mipmap.marti);
+                            ((ItemOneFragment) frag1).refreshed=true;
+                        }
+                    });
+
+                    break;
+
+        }
+
+
 
     }
 
@@ -64,8 +78,6 @@ public  class MainPage extends AppCompatActivity {
         setContentView(R.layout.mainpage_layout);
 
        EventBus.getDefault().register(this);
-
-
 
 
         bottomNavigationView = findViewById(R.id.navigation);
@@ -87,9 +99,11 @@ public  class MainPage extends AppCompatActivity {
 
                             case R.id.action_item1:
                                 if(frag1!=null){
+
                                     selectedFragment = frag1;
-                                    ((ItemOneFragment) selectedFragment).scrolltoTop();
                                     bottomNavigationView.getMenu().findItem(R.id.action_item1).setIcon(R.drawable.ic_account_box_black_24dp);
+                                    ((ItemOneFragment) selectedFragment).scrolltoTop();
+
                                 }else{
                                     frag1=ItemOneFragment.newInstance();
                                     selectedFragment = frag1;

@@ -30,6 +30,6 @@
     <string name="description">List İmage</string>
 
     <!-- CONFIG-->
-    <string name="api_url">http://10.0.2.2/</string>
+    <string name="int_yok">Şu Anda Verilerini Yüklemek İçin Sunucuyla Bağlantı Kuramıyoruz.Lütfen İnternet Bağlantını Kontrol Et.</string>
 
 </resources>
