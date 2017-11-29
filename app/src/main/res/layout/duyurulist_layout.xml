@@ -1,0 +1,95 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:orientation="horizontal"
+
+    >
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/duyuru_background"
+        android:orientation="horizontal"
+        android:padding="25dp"
+        android:layout_margin="3dp"
+        >
+
+        <RelativeLayout
+            android:id="@+id/test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+            <LinearLayout
+                android:id="@+id/thumbnail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:padding="3dp"
+
+                >
+
+                <ImageView
+                    android:id="@+id/list_image"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/description"
+                    android:src="@drawable/l1" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/thumbnail"
+                android:layout_toEndOf="@+id/thumbnail"
+                android:layout_toRightOf="@+id/thumbnail"
+
+                android:textColor="#040404"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:typeface="sans" />
+
+
+            <TextView
+                android:id="@+id/yazar"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title"
+                android:layout_marginTop="1dp"
+                android:layout_toEndOf="@+id/thumbnail"
+                android:layout_toRightOf="@+id/thumbnail"
+                android:textColor="#343434"
+                android:textSize="12sp"
+
+                />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/test"
+            android:layout_margin="5dp"
+            android:minHeight="50dp"
+            android:textSize="16sp" />
+
+
+    </RelativeLayout>
+
+
+
+
+</RelativeLayout>

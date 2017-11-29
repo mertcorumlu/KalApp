@@ -63,8 +63,8 @@ public class JSONParser {
         URLConnection c = ur.openConnection();
 
         // set the connection timeout to 5 seconds
-        c.setConnectTimeout(10*1000);
-        c.setReadTimeout(10*1000);
+        c.setConnectTimeout(15*1000);
+        c.setReadTimeout(15*1000);
         c.setUseCaches(false);
 
 

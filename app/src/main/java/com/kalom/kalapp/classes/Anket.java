@@ -5,17 +5,19 @@ import android.graphics.drawable.Drawable;
 import java.io.InputStream;
 import java.net.URL;
 
-public class Duyuru {
+public class Anket {
 
     private String Yazar;
     private String Baslik;
     private String Icerik;
+    private int ID;
     private Drawable Image;
 
-    public Duyuru(String mYazar,String mBaslik,String mIcerik,String Image_url){
+    public Anket(String mYazar, String mBaslik, String mIcerik, String Image_url,int mID){
         Yazar =mYazar;
         Baslik=mBaslik;
         Icerik=mIcerik;
+        setID(mID);
        /* Image=LoadImageFromWebOperations(Image_url);*/
     }
 
@@ -52,7 +54,6 @@ public class Duyuru {
         this.Image = img;
     }
 
-
     public static Drawable LoadImageFromWebOperations(String url) {
         try {
             InputStream is = (InputStream) new URL(url).getContent();
@@ -64,6 +65,13 @@ public class Duyuru {
     }
 
 
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
 }
 
 

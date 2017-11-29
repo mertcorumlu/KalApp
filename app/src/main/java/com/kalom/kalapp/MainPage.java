@@ -1,37 +1,26 @@
 package com.kalom.kalapp;
 
 import android.annotation.SuppressLint;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import com.google.firebase.messaging.FirebaseMessagingService;
-import com.google.firebase.messaging.RemoteMessage;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.kalom.kalapp.classes.Config;
-import com.kalom.kalapp.classes.Duyuru;
 import com.kalom.kalapp.classes.JSONParser;
 import com.kalom.kalapp.classes.SessionManager;
 import com.kalom.kalapp.fragments.*;
 
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AbsListView;
-import android.widget.ListView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -39,7 +28,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public  class MainPage extends AppCompatActivity {
@@ -60,7 +48,7 @@ public  class MainPage extends AppCompatActivity {
                         @Override
                         public void run() {
                             bottomNavigationView.getMenu().findItem(R.id.action_item1).setIcon(R.mipmap.marti);
-                            ((ItemOneFragment) frag1).refreshed=true;
+                            ((DuyuruFragment) frag1).refreshed=true;
                         }
                     });
 
@@ -78,6 +66,8 @@ public  class MainPage extends AppCompatActivity {
         setContentView(R.layout.mainpage_layout);
 
        EventBus.getDefault().register(this);
+
+       Log.d("FIREE", FirebaseInstanceId.getInstance().getToken());
 
 
         bottomNavigationView = findViewById(R.id.navigation);
@@ -102,10 +92,10 @@ public  class MainPage extends AppCompatActivity {
 
                                     selectedFragment = frag1;
                                     bottomNavigationView.getMenu().findItem(R.id.action_item1).setIcon(R.drawable.ic_account_box_black_24dp);
-                                    ((ItemOneFragment) selectedFragment).scrolltoTop();
+                                    ((DuyuruFragment) selectedFragment).scrolltoTop();
 
                                 }else{
-                                    frag1=ItemOneFragment.newInstance();
+                                    frag1= DuyuruFragment.newInstance();
                                     selectedFragment = frag1;
                                 }
                                 break;
@@ -114,10 +104,10 @@ public  class MainPage extends AppCompatActivity {
                             case R.id.action_item2:
                                 if(frag2!=null){
                                     selectedFragment = frag2;
-                                    ((ItemOneFragment) selectedFragment).scrolltoTop();
+                                    ((AnketFragment) selectedFragment).scrolltoTop();
 
                                 }else{
-                                    frag2=ItemOneFragment.newInstance();
+                                    frag2= AnketFragment.newInstance();
                                     selectedFragment = frag2;
 
                                 }
@@ -125,13 +115,13 @@ public  class MainPage extends AppCompatActivity {
 
 
                             case R.id.action_item3:
-                                selectedFragment = ItemOneFragment.newInstance();
+                                selectedFragment = DuyuruFragment.newInstance();
                                 break;
 
 
 
                             case R.id.action_item4:
-                                selectedFragment = ItemOneFragment.newInstance();
+                                selectedFragment = DuyuruFragment.newInstance();
                                 break;
                         }
 
@@ -149,8 +139,9 @@ public  class MainPage extends AppCompatActivity {
         //Manually displaying the first fragment - one time only
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        frag1=ItemOneFragment.newInstance();
-        transaction.replace(R.id.frame_layout,frag1);
+        frag1= DuyuruFragment.newInstance();
+        frag2=AnketFragment.newInstance();
+        transaction.replace(R.id.frame_layout,frag2);
         transaction.commit();
 
         //Used to select an item programmatically

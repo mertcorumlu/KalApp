@@ -17,11 +17,12 @@
         android:layout_gravity="center"
         tools:ignore="UselessParent">
 
-        <ImageView
+        <ProgressBar
             android:id="@+id/img_draw"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:src="@drawable/loader"
+            android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/loader"
              />
 
 

@@ -1,0 +1,54 @@
+<RelativeLayout
+    android:id="@+id/activity_main"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.kalom.kalapp.MainPage">
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#fff"
+        >
+
+
+        <ImageView
+            android:layout_width="75dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            app:srcCompat="@mipmap/marti"
+            android:id="@+id/toolbar_title" />
+
+
+    </android.support.v7.widget.Toolbar>
+
+    <FrameLayout
+        android:background="#f5f5f5"
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:layout_below="@+id/toolbar"
+        android:layout_above="@+id/navigation"
+        >
+
+    </FrameLayout>
+    <!--#e8e8e8-->
+
+
+
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#fff"
+        app:itemIconTint="@color/BottomTextColor"
+        app:itemTextColor="@color/BottomTextColor"
+        app:menu="@menu/bottom_navigation_items"/>
+</RelativeLayout>

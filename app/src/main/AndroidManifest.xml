@@ -29,9 +29,14 @@
             android:name=".Login_Activity"
             android:windowSoftInputMode="adjustResize">
         </activity>
+
         <activity
             android:name=".MainPage">
 
+        </activity>
+
+        <activity
+            android:name=".AnketActivity">
         </activity>
 
         <service

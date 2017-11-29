@@ -5,19 +5,13 @@ import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.kalom.kalapp.MainActivity;
@@ -36,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ItemOneFragment extends Fragment {
+public class DuyuruFragment extends Fragment {
 
     private DuyuruAdapter adapter=null;
     private DuyuruInfo us;
@@ -51,8 +45,8 @@ public class ItemOneFragment extends Fragment {
 
     final List<Duyuru> duyurular= new ArrayList<>();
 
-    public static  ItemOneFragment newInstance() {
-        return new  ItemOneFragment();
+    public static DuyuruFragment newInstance() {
+        return new DuyuruFragment();
     }
 
     @Override
@@ -70,7 +64,7 @@ public class ItemOneFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-         final View rootView = inflater.inflate(R.layout.fragement_item_one,
+         final View rootView = inflater.inflate(R.layout.duyurufragment_layout,
                 container, false);
 
           listemiz=rootView.findViewById(R.id.listView1);
@@ -78,8 +72,7 @@ public class ItemOneFragment extends Fragment {
 
             swip=rootView.findViewById(R.id.swiperefresh);
 
-
-       // listemiz.setSmoothScrollbarEnabled(true);
+        listemiz.setSmoothScrollbarEnabled(true);
 
         adapter=new DuyuruAdapter(getActivity(),duyurular);
         listemiz.setAdapter(adapter);
@@ -144,7 +137,7 @@ public class ItemOneFragment extends Fragment {
 
     protected void showloader(){
         listemiz.addFooterView(list_footer_view);
-        //listemiz.setSelection(listemiz.getLastVisiblePosition());
+        listemiz.setSelection(listemiz.getLastVisiblePosition());
         listemiz.setEnabled(false);
         swip.setEnabled(false);
 
@@ -211,7 +204,7 @@ public class ItemOneFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result){
-            hideloader();
+           hideloader();
             if(result==null){
 
                 Toast.makeText(getContext(),"INTERNET YOK",Toast.LENGTH_LONG).show();

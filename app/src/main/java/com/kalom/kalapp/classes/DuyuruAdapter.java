@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.kalom.kalapp.R;
 
-
 import java.util.List;
 
 
@@ -54,7 +53,7 @@ public class DuyuruAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         View satir;
 
-        satir=mInflater.inflate(R.layout.list_layout, null);
+        satir=mInflater.inflate(R.layout.duyurulist_layout, null);
 
         Duyuru duy=mDuyurular.get(i);
 
@@ -62,10 +61,10 @@ public class DuyuruAdapter extends BaseAdapter {
         TextView baslik= satir.findViewById(R.id.title);
         baslik.setText(duy.getBaslik());
 
-        TextView prebaslik= satir.findViewById(R.id.artist);
-        prebaslik.setText(duy.getCategory());
+        TextView prebaslik= satir.findViewById(R.id.yazar);
+        prebaslik.setText(duy.getYazar());
 
-        final TextView icerik= satir.findViewById(R.id.textView);
+        final TextView icerik= satir.findViewById(R.id.content);
         final String str_icerik=duy.getIcerik();
 
         /*
@@ -74,7 +73,7 @@ public class DuyuruAdapter extends BaseAdapter {
             SpannableString ss = new SpannableString(str_icerik.substring(0,Config.duyuru_max_uzunluk) + ".... Devamını Oku");
             ClickableSpan span1 = new ClickableSpan() {
                 @Override
-                public void onClick(View textView) {
+                public void onClick(View content) {
                     // do some thing
                     icerik.setText(str_icerik);
                 }
@@ -96,3 +95,5 @@ public class DuyuruAdapter extends BaseAdapter {
 
 
 }
+
+

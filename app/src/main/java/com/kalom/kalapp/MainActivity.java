@@ -180,6 +180,8 @@ public class MainActivity extends AppCompatActivity {
                 //login kontrol etmek için sunucuya yapılması gereken istek
                 String api_call= Config.api_server+"?action=user_info&hash="+hash;
 
+                System.out.println(api_call);
+
                 //JSONParser kütüphanesi ile sunucuya istek yollanır.
                 //Yanıt olarak JSONObject döner
                 return js.readJson(api_call);

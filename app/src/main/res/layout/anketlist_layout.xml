@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
@@ -10,13 +11,14 @@
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:background="@drawable/duyuru_background"
         android:orientation="horizontal"
-        android:padding="25dp"
+        android:padding="15dp"
         android:layout_margin="3dp"
-        >
+        android:focusable="true">
 
         <RelativeLayout
             android:id="@+id/test"
@@ -38,9 +40,11 @@
 
                 <ImageView
                     android:id="@+id/list_image"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="41dp"
+                    android:layout_height="39dp"
+                    android:adjustViewBounds="false"
                     android:contentDescription="@string/description"
+                    android:cropToPadding="false"
                     android:src="@drawable/l1" />
 
             </LinearLayout>
@@ -54,6 +58,7 @@
                 android:layout_toEndOf="@+id/thumbnail"
                 android:layout_toRightOf="@+id/thumbnail"
 
+                android:text="BU BİR TEST YAZSIDIR"
                 android:textColor="#040404"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -61,30 +66,34 @@
 
 
             <TextView
-                android:id="@+id/artist"
+                android:id="@+id/yazar"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/title"
+                android:layout_alignRight="@+id/title"
                 android:layout_below="@id/title"
                 android:layout_marginTop="1dp"
                 android:layout_toEndOf="@+id/thumbnail"
                 android:layout_toRightOf="@+id/thumbnail"
-                android:textColor="#343434"
-                android:textSize="12sp"
 
-                />
+                android:text="Öğrenci Meclisi"
+                android:textColor="#343434"
+                android:textSize="12sp" />
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/test"
-            android:layout_margin="5dp"
-            android:minHeight="50dp"
-            android:textSize="16sp" />
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="22dp"
+            android:layout_marginRight="22dp"
+            android:contentDescription="@string/description"
+            android:cropToPadding="true"
+            app:srcCompat="@drawable/right_arrow" />
 
 
     </RelativeLayout>
