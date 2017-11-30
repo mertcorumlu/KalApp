@@ -1,17 +1,25 @@
 package com.kalom.kalapp;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
+
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kalom.kalapp.classes.Config;
 import com.kalom.kalapp.classes.JSONParser;
 import com.kalom.kalapp.classes.SessionManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,11 +30,18 @@ import java.util.concurrent.ExecutionException;
 public class AnketActivity extends AppCompatActivity {
 
     private JSONObject anket_json;
+    private String anket_title;
+    private String anket_yazar;
+    private JSONArray anket_content;
+    private LinearLayout ln;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.anket_layout);
+
+        overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
+
 
        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -49,11 +64,16 @@ public class AnketActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Anket Sunucusuna Bağlanırken Bir Hata Oluştu.",Toast.LENGTH_LONG).show();
             }
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+
+            anket_title=(String) anket_json.get("title");
+            anket_yazar=(String) anket_json.get("yazar");
+            anket_content=(JSONArray) anket_json.get("content");
+
+
+            ln = findViewById(R.id.anket_linear);
+            addAnketView();
+
+        } catch (InterruptedException | ExecutionException | JSONException e) {
             e.printStackTrace();
         }
 
@@ -64,11 +84,66 @@ public class AnketActivity extends AppCompatActivity {
     }
 
 
+    private View addAnketView() throws JSONException{
+
+
+       for(int i=0;i<anket_content.length();i++){
+
+           JSONObject soru =(JSONObject) anket_content.get(i);
+
+           /*
+           TextView İçin Burada View Oluşturuldu.
+            */
+            TextView soru_text=new TextView(this);
+            soru_text.setText((String) soru.get("soru"));
+            soru_text.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            soru_text.setTextSize(18);
+            soru_text.setTextColor(Color.BLACK);
+                ln.addView(soru_text);
+
+               JSONArray options=(JSONArray) soru.get("options");
+
+           if(soru.get("type").equals("radio") ){
+
+               RadioGroup rg=new RadioGroup(this);
+               rg.setId(i);
+
+
+                   for (int j=0;j<options.length();j++){
+
+                       JSONObject opt_cont = (JSONObject) options.get(j);
+
+                       RadioButton rb = new RadioButton(this);
+                       rb.setText((String) opt_cont.get("opt_content"));
+                       //rb.setid
+
+                       rg.addView(rb);
+
+                   }
+
+                   ln.addView(rg);
+
+           }
+
+
+
+
+       }
+    return null;
+
+    }
+
 
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
     }
 
 

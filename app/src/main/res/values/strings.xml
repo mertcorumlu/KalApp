@@ -32,4 +32,8 @@
     <!-- CONFIG-->
     <string name="int_yok">Şu Anda Verilerini Yüklemek İçin Sunucuyla Bağlantı Kuramıyoruz.Lütfen İnternet Bağlantını Kontrol Et.</string>
 
+
+
+    <item name="visible" type="id"/>
+    <item name="masked" type="id"/>
 </resources>

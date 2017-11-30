@@ -1,4 +1,4 @@
-<RelativeLayout
+<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -27,43 +27,17 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <FrameLayout
+    <LinearLayout
         android:background="#f5f5f5"
-        android:id="@+id/frame_layout"
         android:layout_width="match_parent"
+        android:id="@+id/anket_linear"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
         android:layout_below="@+id/toolbar"
+        android:orientation="vertical"
+        android:padding="15sp">
+        </LinearLayout>
 
-        >
-
-        <RadioGroup
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <RadioButton
-                android:id="@+id/radioButton6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="RadioButton" />
-
-            <RadioButton
-                android:id="@+id/radioButton5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="RadioButton" />
-
-            <RadioButton
-                android:id="@+id/radioButton4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="RadioButton" />
-        </RadioGroup>
-    </FrameLayout>
-    <!--#e8e8e8-->
 
 
 
