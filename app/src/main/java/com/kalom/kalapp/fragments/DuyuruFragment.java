@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.kalom.kalapp.classes.Config;
 import com.kalom.kalapp.classes.Duyuru;
 import com.kalom.kalapp.classes.DuyuruAdapter;
 import com.kalom.kalapp.classes.JSONParser;
+import com.kalom.kalapp.classes.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +41,8 @@ public class DuyuruFragment extends Fragment {
     private CoordinatorLayout coordinatorLayout;
     private SwipeRefreshLayout swip;
 
+    private SessionManager session;
+
     private int str=0;
     private int fnsh=Config.duyuru_load_one_time;
     public boolean refreshed=false;
@@ -52,7 +56,7 @@ public class DuyuruFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        session = new SessionManager(getContext());
 
 
 
@@ -189,7 +193,9 @@ public class DuyuruFragment extends Fragment {
 
             try{
 
-                String api_call= Config.api_server+"include/duyuru.php?s="+str +"&f="+fnsh;
+
+
+                String api_call= Config.api_server+"?action=duyuru&hash="+session.getToken()+"&s="+str +"&f="+fnsh;
                 str=fnsh;
                 fnsh+=Config.duyuru_load_one_time;
                 return js.JsonString(api_call);
@@ -221,10 +227,11 @@ public class DuyuruFragment extends Fragment {
                     try {
                         JSONObject obj = (JSONObject) ar.get(i);
                         duyurular.add(new Duyuru(
-                                obj.get("baslik").toString(),
-                                obj.get("prebaslik").toString(),
+                                Integer.parseInt(obj.get("id").toString()),
+                                obj.get("yazar").toString(),
+                                obj.get("title").toString(),
                                 obj.get("content").toString(),
-                                "http://10.0.2.2/logo.jpg"
+                                obj.get("img_url").toString()
                         ));
 
 

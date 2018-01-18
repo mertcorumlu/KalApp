@@ -1,24 +1,19 @@
 package com.kalom.kalapp.classes;
 
-import android.graphics.drawable.Drawable;
-
-import java.io.InputStream;
-import java.net.URL;
-
 public class Anket {
 
     private String Yazar;
     private String Baslik;
-    private String Icerik;
     private int ID;
-    private Drawable Image;
+    private String Image;
+    private boolean Voted;
 
-    public Anket(String mYazar, String mBaslik, String mIcerik, String Image_url,int mID){
+    public Anket(String mYazar, String mBaslik, String Image_url,int mID,boolean mVoted){
         Yazar =mYazar;
         Baslik=mBaslik;
-        Icerik=mIcerik;
         setID(mID);
-       /* Image=LoadImageFromWebOperations(Image_url);*/
+        Image=Image_url;
+        setVoted(mVoted);
     }
 
 
@@ -38,32 +33,13 @@ public class Anket {
         Baslik = baslik;
     }
 
-    public String getIcerik() {
-        return Icerik;
-    }
-
-    public void setIcerik(String icerik) {
-        Icerik = icerik;
-    }
-
-    public Drawable getImg() {
+    public String getImg() {
         return Image;
     }
 
-    public void setImg(Drawable img) {
+    public void setImg(String img) {
         this.Image = img;
     }
-
-    public static Drawable LoadImageFromWebOperations(String url) {
-        try {
-            InputStream is = (InputStream) new URL(url).getContent();
-            Drawable d = Drawable.createFromStream(is, "src name");
-            return d;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
 
     public int getID() {
         return ID;
@@ -71,6 +47,14 @@ public class Anket {
 
     public void setID(int ID) {
         this.ID = ID;
+    }
+
+    public boolean isVoted() {
+        return Voted;
+    }
+
+    public void setVoted(boolean voted) {
+        Voted = voted;
     }
 }
 

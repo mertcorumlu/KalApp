@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kalom.kalapp.R;
+import com.koushikdutta.ion.Ion;
 
 import java.util.List;
 
@@ -90,6 +92,13 @@ public class DuyuruAdapter extends BaseAdapter {
         }*/
 
         icerik.setText(str_icerik);
+
+
+        ImageView imageView = satir.findViewById(R.id.list_image);
+
+        Ion.with(imageView)
+                .load(duy.getImg());
+
         return satir;
     }
 

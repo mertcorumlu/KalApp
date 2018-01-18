@@ -10,13 +10,15 @@ public class Duyuru {
     private String Yazar;
     private String Baslik;
     private String Icerik;
-    private Drawable Image;
+    private String Image;
+    private int ID;
 
-    public Duyuru(String mYazar,String mBaslik,String mIcerik,String Image_url){
+    public Duyuru(int mID,String mYazar,String mBaslik,String mIcerik,String Image_url){
+        ID=mID;
         Yazar =mYazar;
         Baslik=mBaslik;
         Icerik=mIcerik;
-       /* Image=LoadImageFromWebOperations(Image_url);*/
+        Image=Image_url;
     }
 
 
@@ -44,24 +46,10 @@ public class Duyuru {
         Icerik = icerik;
     }
 
-    public Drawable getImg() {
+    public String getImg() {
         return Image;
     }
 
-    public void setImg(Drawable img) {
-        this.Image = img;
-    }
-
-
-    public static Drawable LoadImageFromWebOperations(String url) {
-        try {
-            InputStream is = (InputStream) new URL(url).getContent();
-            Drawable d = Drawable.createFromStream(is, "src name");
-            return d;
-        } catch (Exception e) {
-            return null;
-        }
-    }
 
 
 }

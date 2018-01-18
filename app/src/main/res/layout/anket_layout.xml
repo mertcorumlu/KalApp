@@ -1,10 +1,9 @@
-<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
 
     <android.support.v7.widget.Toolbar
@@ -12,35 +11,41 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#fff"
-        app:popupTheme="@style/AppTheme.PopupOverlay"
-        >
+        app:popupTheme="@style/AppTheme.PopupOverlay">
 
 
         <ImageView
+            android:id="@+id/toolbar_title"
             android:layout_width="75dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            app:srcCompat="@mipmap/marti"
-            android:id="@+id/toolbar_title"
-            android:contentDescription="@string/description" />
+            android:contentDescription="@string/description"
+            app:srcCompat="@mipmap/marti" />
 
 
     </android.support.v7.widget.Toolbar>
 
-    <LinearLayout
-        android:background="#f5f5f5"
+    <WebView
+        android:id="@+id/anket_webview"
         android:layout_width="match_parent"
-        android:id="@+id/anket_linear"
         android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/toolbar"
-        android:orientation="vertical"
-        android:padding="15sp">
-        </LinearLayout>
+        android:visibility="visible">
 
+    </WebView>
 
-
-
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:indeterminateDrawable="@drawable/loader"
+         />
 
 
 </RelativeLayout>

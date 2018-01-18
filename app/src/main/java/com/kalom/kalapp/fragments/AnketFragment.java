@@ -20,6 +20,7 @@ import com.kalom.kalapp.classes.Anket;
 import com.kalom.kalapp.classes.AnketAdapter;
 import com.kalom.kalapp.classes.Config;
 import com.kalom.kalapp.classes.JSONParser;
+import com.kalom.kalapp.classes.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +40,8 @@ public class AnketFragment extends Fragment {
     private CoordinatorLayout coordinatorLayout;
     private SwipeRefreshLayout swip;
 
+    private SessionManager session;
+
     private int str=0;
     private int fnsh=Config.anket_load_one_time;
     public boolean refreshed=false;
@@ -52,8 +55,7 @@ public class AnketFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+        session = new SessionManager(getContext());
 
 
     }
@@ -188,8 +190,7 @@ public class AnketFragment extends Fragment {
             JSONParser js=new JSONParser();
 
             try{
-
-                String api_call= Config.api_server+"include/duyuru.php?s="+str +"&f="+fnsh;
+                String api_call= Config.api_server+"?action=anket&do=anketleri_getir&hash="+session.getToken()+"&s="+ str +"&f="+fnsh;
                 str=fnsh;
                 fnsh+=Config.anket_load_one_time;
                 return js.JsonString(api_call);
@@ -221,11 +222,11 @@ public class AnketFragment extends Fragment {
                     try {
                         JSONObject obj = (JSONObject) ar.get(i);
                         anketler.add(new Anket(
-                                obj.get("baslik").toString(),
-                                obj.get("prebaslik").toString(),
-                                obj.get("content").toString(),
-                                "http://10.0.2.2/logo.jpg",
-                                1
+                                obj.get("yazar").toString(),
+                                obj.get("title").toString(),
+                                obj.get("img_url").toString(),
+                                (int) Integer.parseInt(obj.get("id").toString()),
+                                (Integer.parseInt(obj.get("voted").toString()) > 0)
                         ));
 
 
