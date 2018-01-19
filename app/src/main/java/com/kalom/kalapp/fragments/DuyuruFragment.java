@@ -150,7 +150,7 @@ public class DuyuruFragment extends Fragment {
     }
 
     protected void hideloader(){
-        listemiz.removeFooterView(list_footer_view);
+        //listemiz.removeFooterView(list_footer_view);
         listemiz.setEnabled(true);
         swip.setEnabled(true);
 

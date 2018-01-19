@@ -17,6 +17,7 @@
         android:hardwareAccelerated="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
+            android:screenOrientation="portrait"
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -26,16 +27,19 @@
             </intent-filter>
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".Login_Activity"
             android:windowSoftInputMode="adjustResize">
         </activity>
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".MainPage">
 
         </activity>
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".AnketActivity">
         </activity>
 
