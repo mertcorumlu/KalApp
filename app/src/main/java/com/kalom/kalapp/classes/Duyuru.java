@@ -1,16 +1,11 @@
 package com.kalom.kalapp.classes;
 
-import android.graphics.drawable.Drawable;
-
-import java.io.InputStream;
-import java.net.URL;
-
 public class Duyuru {
 
     private String Yazar;
     private String Baslik;
     private String Icerik;
-    private String Image;
+    private final String Image;
     private int ID;
 
     public Duyuru(int mID,String mYazar,String mBaslik,String mIcerik,String Image_url){

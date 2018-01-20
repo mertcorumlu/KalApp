@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,7 +78,10 @@ public class DuyuruFragment extends Fragment {
         listemiz.setSmoothScrollbarEnabled(true);
 
         adapter=new DuyuruAdapter(getActivity(),duyurular);
+
+        listemiz.addFooterView(list_footer_view);
         listemiz.setAdapter(adapter);
+        listemiz.removeFooterView(list_footer_view);
 
 
         us=new DuyuruInfo();
@@ -140,6 +142,8 @@ public class DuyuruFragment extends Fragment {
     }
 
     protected void showloader(){
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        list_footer_view.findViewById(R.id.login_progress).animate().setDuration(shortAnimTime).alpha(1);
         listemiz.addFooterView(list_footer_view);
         listemiz.setSelection(listemiz.getLastVisiblePosition());
         listemiz.setEnabled(false);
@@ -150,7 +154,7 @@ public class DuyuruFragment extends Fragment {
     }
 
     protected void hideloader(){
-        //listemiz.removeFooterView(list_footer_view);
+        listemiz.removeFooterView(list_footer_view);
         listemiz.setEnabled(true);
         swip.setEnabled(true);
 
@@ -202,7 +206,7 @@ public class DuyuruFragment extends Fragment {
 
 
 
-            }catch(IOException | JSONException e){
+            }catch(IOException e){
                 e.getMessage();
                 return null;
             }

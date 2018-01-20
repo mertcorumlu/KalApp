@@ -23,7 +23,8 @@
         android:layout_height="101dp"
         android:src="@drawable/loader"
         android:layout_gravity="center"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:contentDescription="LOADER_IMAGE" />
 
     </FrameLayout>
 
@@ -47,7 +48,7 @@
                 android:src="@mipmap/marti"
                 android:layout_gravity="center"
                 android:layout_marginBottom="75dp"
-                />
+                android:contentDescription="KALAPP_MARTI" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -60,7 +61,8 @@
                     android:hint="123123"
                     android:inputType="number"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    tools:targetApi="cupcake" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -78,7 +80,8 @@
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    tools:targetApi="cupcake" />
 
             </android.support.design.widget.TextInputLayout>
 

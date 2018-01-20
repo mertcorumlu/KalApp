@@ -43,9 +43,9 @@ public class MainActivity extends AppCompatActivity {
         //Shared Preferences İçinde Tutulacak Olan Login Hash İçin Kütüphane
         SessionManager session = new SessionManager(getApplicationContext());
 
-        /**
-         *Eğer Login Hash Kayıtlı Değilse Daha Önce Hiç Giriş Yapılmamıştır.
-         * Bu Durumda Login Ekranına Yönlendir.
+        /*
+         Eğer Login Hash Kayıtlı Değilse Daha Önce Hiç Giriş Yapılmamıştır.
+          Bu Durumda Login Ekranına Yönlendir.
          */
             if(session.getToken()==null){
                 Log.d("MESAJ","Giriş Yapılmamış. " + session.getToken());
@@ -69,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
                 assert session.getToken()!=null;
 
-                /**
-                 *Eğer Sunucuya Ulaşılamadıysa, Bir Alert Dialog Oluştur ve Kullanıcıyı Bilgilendir.
+                /*
+                 Eğer Sunucuya Ulaşılamadıysa, Bir Alert Dialog Oluştur ve Kullanıcıyı Bilgilendir.
                  */
                 if(info==null) {
 
@@ -97,10 +97,10 @@ public class MainActivity extends AppCompatActivity {
                 }
 
 
-                /**
-                 *Suncudan Gelen Verileri Kontrol Et.
-                 *Eğer Sunucu Login Hashi Onaylamışsa Ana Ekrana Yönlendir.
-                 * Eğer Login Hashin Süresi Dolmuşsa Oturumu Zaman Aşımına Uğrat.Logine Yönlendir.
+                /*
+                 Suncudan Gelen Verileri Kontrol Et.
+                 Eğer Sunucu Login Hashi Onaylamışsa Ana Ekrana Yönlendir.
+                  Eğer Login Hashin Süresi Dolmuşsa Oturumu Zaman Aşımına Uğrat.Logine Yönlendir.
                  */
                 if(info.get("valid").equals(true)){
 
@@ -144,8 +144,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         }catch (InterruptedException | ExecutionException e){
-                /**
-                 *Sunucyla Bağlantı Sağlanamdığını Konsola Yaz
+                /*
+                 Sunucyla Bağlantı Sağlanamdığını Konsola Yaz
                  */
             e.getMessage();
             Log.d("MESAJ","Sunucudan Alınan Bilgiler Alınırken Bir Hata Oluştu..");
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
          * bağlantı kuramazsa null döndürür
          */
 
-        private String hash;
+        private final String hash;
 
         UserInfo(String token) {
             hash=token;

@@ -18,8 +18,8 @@ import java.util.List;
 
 public class DuyuruAdapter extends BaseAdapter {
 
-    private LayoutInflater mInflater;
-    private List<Duyuru> mDuyurular;
+    private final LayoutInflater mInflater;
+    private final List<Duyuru> mDuyurular;
     private boolean isopened;
 
     public DuyuruAdapter(Activity activity,List<Duyuru> duyurular){

@@ -1,8 +1,10 @@
 package com.kalom.kalapp;
 
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -14,11 +16,16 @@ import android.widget.Toast;
 import com.kalom.kalapp.classes.Config;
 import com.kalom.kalapp.classes.SessionManager;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.lang.reflect.Array;
+
 
 public class AnketActivity extends AppCompatActivity {
-    private int anketID;
 
 
+    @SuppressLint("SetJavaScriptEnabled")
+    @RequiresApi(api = Build.VERSION_CODES.ECLAIR)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,11 +41,11 @@ public class AnketActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         Bundle extras=getIntent().getExtras();
-        anketID=extras.getInt("anket_id");
+        int anketID = extras.getInt("anket_id");
 
 
 
-        WebView webview = (WebView) findViewById(R.id.anket_webview);
+        WebView webview = findViewById(R.id.anket_webview);
         WebSettings settings = webview.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setLoadWithOverviewMode(true);
@@ -48,12 +55,12 @@ public class AnketActivity extends AppCompatActivity {
         webview.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         SessionManager session = new SessionManager(getApplicationContext());
 
-        webview.loadUrl(Config.api_server+"?action=anket&hash="+session.getToken()+"&do=anket_getir&id="+anketID);
+        webview.loadUrl(Config.api_server+"?action=anket&hash="+session.getToken()+"&do=anket_getir&id="+ anketID);
 
 
 
         webview.setWebViewClient(new WebViewClient() {
-            ProgressBar pb=findViewById(R.id.progressBar);
+            final ProgressBar pb=findViewById(R.id.progressBar);
 
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -79,10 +86,14 @@ public class AnketActivity extends AppCompatActivity {
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.ECLAIR)
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
+
+        EventBus.getDefault().post("ANKETTEN_GERI_DONULDU");
+
     }
 
 

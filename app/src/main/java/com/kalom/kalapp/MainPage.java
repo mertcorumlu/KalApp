@@ -170,8 +170,8 @@ public  class MainPage extends AppCompatActivity {
 
                 assert session.getToken()!=null;
 
-                /**
-                 *Eğer Sunucuya Ulaşılamadıysa, Bir Alert Dialog Oluştur ve Kullanıcıyı Bilgilendir.
+                /*
+                 Eğer Sunucuya Ulaşılamadıysa, Bir Alert Dialog Oluştur ve Kullanıcıyı Bilgilendir.
                  */
                 if(info==null) {
 
@@ -198,10 +198,10 @@ public  class MainPage extends AppCompatActivity {
                 }
 
 
-                /**
-                 *Suncudan Gelen Verileri Kontrol Et.
-                 *Eğer Sunucu Login Hashi Onaylamışsa Ana Ekrana Yönlendir.
-                 * Eğer Login Hashin Süresi Dolmuşsa Oturumu Zaman Aşımına Uğrat.Logine Yönlendir.
+                /*
+                 Suncudan Gelen Verileri Kontrol Et.
+                 Eğer Sunucu Login Hashi Onaylamışsa Ana Ekrana Yönlendir.
+                  Eğer Login Hashin Süresi Dolmuşsa Oturumu Zaman Aşımına Uğrat.Logine Yönlendir.
                  */
                 if(!info.get("valid").equals(true)){
 
@@ -237,8 +237,8 @@ public  class MainPage extends AppCompatActivity {
 
 
         }catch (InterruptedException | ExecutionException e){
-            /**
-             *Sunucyla Bağlantı Sağlanamdığını Konsola Yaz
+            /*
+             Sunucyla Bağlantı Sağlanamdığını Konsola Yaz
              */
             e.getMessage();
             Log.d("MESAJ","Sunucudan Alınan Bilgiler Alınırken Bir Hata Oluştu..");
@@ -261,7 +261,7 @@ public  class MainPage extends AppCompatActivity {
          * bağlantı kuramazsa null döndürür
          */
 
-        private String hash;
+        private final String hash;
 
         UserInfo(String token) {
             hash=token;

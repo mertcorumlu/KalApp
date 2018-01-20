@@ -2,15 +2,6 @@ package com.kalom.kalapp.classes;
 
 
 
-import android.content.Context;
-import android.net.http.HttpsConnection;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
@@ -64,7 +54,7 @@ public class JSONParser {
     }
 
 
-    public String JsonString(String url) throws IOException, JSONException {
+    public String JsonString(String url) throws IOException {
         InputStream is = new URL (url).openStream();
         InputStreamReader isr = new InputStreamReader(is, Charset.forName("UTF-8"));
         BufferedReader rd = new BufferedReader(isr);

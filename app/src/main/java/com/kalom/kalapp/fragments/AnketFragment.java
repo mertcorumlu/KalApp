@@ -1,6 +1,7 @@
 package com.kalom.kalapp.fragments;
 
 
+
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import com.kalom.kalapp.classes.Config;
 import com.kalom.kalapp.classes.JSONParser;
 import com.kalom.kalapp.classes.SessionManager;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,6 +49,8 @@ public class AnketFragment extends Fragment {
     private int fnsh=Config.anket_load_one_time;
     public boolean refreshed=false;
 
+    private boolean ankete_girdi=false;
+
     final List<Anket> anketler = new ArrayList<>();
 
     public static AnketFragment newInstance() {
@@ -56,6 +61,12 @@ public class AnketFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         session = new SessionManager(getContext());
+
+
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
+
 
 
     }
@@ -77,7 +88,10 @@ public class AnketFragment extends Fragment {
         listemiz.setSmoothScrollbarEnabled(true);
 
         adapter=new AnketAdapter(getActivity(), anketler,getContext());
+
+        listemiz.addFooterView(list_footer_view);
         listemiz.setAdapter(adapter);
+        listemiz.removeFooterView(list_footer_view);
 
 
         us=new AnketInfo();
@@ -138,6 +152,10 @@ public class AnketFragment extends Fragment {
     }
 
     protected void showloader(){
+
+
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        list_footer_view.findViewById(R.id.login_progress).animate().setDuration(shortAnimTime).alpha(1);
         listemiz.addFooterView(list_footer_view);
         listemiz.setSelection(listemiz.getLastVisiblePosition());
         listemiz.setEnabled(false);
@@ -148,7 +166,7 @@ public class AnketFragment extends Fragment {
     }
 
     protected void hideloader(){
-        //listemiz.removeFooterView(list_footer_view);
+        listemiz.removeFooterView(list_footer_view);
         listemiz.setEnabled(true);
         swip.setEnabled(true);
 
@@ -197,7 +215,7 @@ public class AnketFragment extends Fragment {
 
 
 
-            }catch(IOException | JSONException e){
+            }catch(IOException e){
                 e.getMessage();
                 return null;
             }
@@ -225,7 +243,7 @@ public class AnketFragment extends Fragment {
                                 obj.get("yazar").toString(),
                                 obj.get("title").toString(),
                                 obj.get("img_url").toString(),
-                                (int) Integer.parseInt(obj.get("id").toString()),
+                                Integer.parseInt(obj.get("id").toString()),
                                 (Integer.parseInt(obj.get("voted").toString()) > 0)
                         ));
 
@@ -255,5 +273,15 @@ public class AnketFragment extends Fragment {
 
 
     }
+
+
+    @Subscribe
+    public void onEvent(String event) {
+        if(event=="ANKETTEN_GERI_DONULDU"){
+                refresh();
+        }
+    }
+
+
 
 }

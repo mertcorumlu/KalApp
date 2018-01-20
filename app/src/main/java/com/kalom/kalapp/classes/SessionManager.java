@@ -11,13 +11,13 @@ import com.kalom.kalapp.Login_Activity;
 
 public class SessionManager {
     // Shared Preferences
-    SharedPreferences pref;
+    final SharedPreferences pref;
 
     // Editor for Shared preferences
-    public Editor editor;
+    public final Editor editor;
 
     // Context
-    private Context _context;
+    private final Context _context;
 
     // Sharedpref file name
     private static final String PREF_NAME = "KALSESSION";
@@ -81,7 +81,7 @@ public class SessionManager {
      * Get stored session data
      * */
     public HashMap<String, String> getUserDetails(){
-        HashMap<String, String> user = new HashMap<String, String>();
+        HashMap<String, String> user = new HashMap<>();
         // user name
         user.put(KEY_TOKEN, pref.getString(KEY_TOKEN, null));
 

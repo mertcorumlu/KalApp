@@ -50,8 +50,8 @@ import android.widget.Toast;
  */
 public class Login_Activity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    /**
-     * Id to identity READ_CONTACTS permission request.
+    /*
+      Id to identity READ_CONTACTS permission request.
      */
    // private static final int REQUEST_READ_CONTACTS = 0;
 
@@ -320,8 +320,8 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
 
                     return true;
                 }else{
-                    /**
-                     *Eğer Error=true dönmüşse kullanıcın verdiği bilgiler yanlıştır.Sunucudan gelen error mesajını @error değişkenine aktar.
+                    /*
+                     Eğer Error=true dönmüşse kullanıcın verdiği bilgiler yanlıştır.Sunucudan gelen error mesajını @error değişkenine aktar.
                      */
                     error=(String) LoginCallback.get("message");
                     return false;
@@ -346,18 +346,18 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
         @Override
         protected void onPostExecute(final Boolean success) {
 
-            /**
-             *İşlem çalıştırıldıktan sonra gelen cevapları kontrol Eder.
-             * Gelen cevaplara göre giriş işlemini gerkeçkleştirir.
+            /*
+             İşlem çalıştırıldıktan sonra gelen cevapları kontrol Eder.
+              Gelen cevaplara göre giriş işlemini gerkeçkleştirir.
              */
 
             //form sıfırlanır
             mAuthTask = null;
 
 
-            /**
-             *Eğer sunucuya ulaşılamamışsa Toast mesajı ile kullanıcı bilgilendirilir.
-             * Herhangi bir işlem Yapılmaz.
+            /*
+             Eğer sunucuya ulaşılamamışsa Toast mesajı ile kullanıcı bilgilendirilir.
+              Herhangi bir işlem Yapılmaz.
              */
             if(isInternetDown){
                 showProgress(false);
@@ -370,9 +370,9 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
 
                 if (success) {
 
-                /**
-                 *Eğer Sunucudan Error=false dönmüşse giriş yapılmış demektir.
-                 * Ana Ekrana Yönlendir.
+                /*
+                 Eğer Sunucudan Error=false dönmüşse giriş yapılmış demektir.
+                  Ana Ekrana Yönlendir.
                  */
 
                     System.out.println("Giriş Yapıldı Yönlendiriliyor.");
@@ -382,8 +382,8 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
 
 
                 } else {
-                /**
-                 *Daha Önce @error değişkenine aktarılan hata yazısını @mPasswordView değişkeni üzerinden kullanıcıya göster
+                /*
+                 Daha Önce @error değişkenine aktarılan hata yazısını @mPasswordView değişkeni üzerinden kullanıcıya göster
                  */
 
                     //loaderı gizle
