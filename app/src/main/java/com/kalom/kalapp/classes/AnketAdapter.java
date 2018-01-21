@@ -64,6 +64,7 @@ public class AnketAdapter extends BaseAdapter {
 
         satir=mInflater.inflate(R.layout.anketlist_layout, null);
 
+
         final Anket anket= mAnketler.get(i);
 
 
