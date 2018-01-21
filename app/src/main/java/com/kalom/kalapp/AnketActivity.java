@@ -2,6 +2,7 @@ package com.kalom.kalapp;
 
 
 import android.annotation.SuppressLint;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -10,15 +11,13 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.kalom.kalapp.classes.Config;
 import com.kalom.kalapp.classes.SessionManager;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.lang.reflect.Array;
 
 
 public class AnketActivity extends AppCompatActivity {
@@ -57,20 +56,18 @@ public class AnketActivity extends AppCompatActivity {
 
         webview.loadUrl(Config.api_server+"?action=anket&hash="+session.getToken()+"&do=anket_getir&id="+ anketID);
 
-
+            set_loader();
 
         webview.setWebViewClient(new WebViewClient() {
-            final ProgressBar pb=findViewById(R.id.progressBar);
-
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                pb.setVisibility(View.GONE);
+                hide_loader();
             }
 
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 Toast.makeText(getApplicationContext(), "Bir hata oluştu", Toast.LENGTH_SHORT).show();
-                pb.setVisibility(View.GONE);
+                hide_loader();
             }
         });
 
@@ -94,6 +91,22 @@ public class AnketActivity extends AppCompatActivity {
 
         EventBus.getDefault().post("ANKETTEN_GERI_DONULDU");
 
+    }
+
+    public void set_loader(){
+        AnimationDrawable animationDrawable;
+        ImageView mProgressBar=findViewById(R.id.login_progress);
+        mProgressBar.setBackgroundResource(R.drawable.loader);
+        animationDrawable = (AnimationDrawable)mProgressBar.getBackground();
+        animationDrawable.start();
+
+        mProgressBar=null;
+    }
+
+    public void hide_loader(){
+        ImageView img= findViewById(R.id.login_progress);
+        img.setVisibility(View.GONE);
+        img=null;
     }
 
 

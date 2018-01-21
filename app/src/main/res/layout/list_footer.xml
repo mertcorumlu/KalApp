@@ -11,13 +11,12 @@
 
     <ImageView
         android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyleLarge"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/loader"
         android:layout_gravity="center|center_vertical"
         android:layout_centerInParent="true"
         android:contentDescription="LOADER_IMAGE" />
+
 
 
 

@@ -3,6 +3,7 @@ package com.kalom.kalapp.classes;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.kalom.kalapp.AnketActivity;
 import com.kalom.kalapp.R;
+import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 import java.util.List;
@@ -81,10 +83,23 @@ public class AnketAdapter extends BaseAdapter {
             }
         });
 
-        ImageView imageView = satir.findViewById(R.id.list_image);
+        final ImageView imageView = satir.findViewById(R.id.list_image);
+
+        AnimationDrawable animationDrawable;
+        imageView.setBackgroundResource(R.drawable.spin_loader);
+        animationDrawable = (AnimationDrawable)imageView.getBackground();
+        animationDrawable.start();
 
         Ion.with(imageView)
-                .load(anket.getImg());
+                .error(R.drawable.danger)
+                .load(anket.getImg())
+                .setCallback(new FutureCallback<ImageView>() {
+                    @Override
+                    public void onCompleted(Exception e, ImageView result) {
+                        imageView.setBackground(null);
+                    }
+
+                });
 
         if(anket.isVoted()){
             ImageView voted_image=satir.findViewById(R.id.imageView);

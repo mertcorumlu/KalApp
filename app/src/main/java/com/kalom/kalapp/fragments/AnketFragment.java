@@ -3,6 +3,7 @@ package com.kalom.kalapp.fragments;
 
 
 import android.annotation.SuppressLint;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -153,13 +155,21 @@ public class AnketFragment extends Fragment {
 
     protected void showloader(){
 
-
-        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-        list_footer_view.findViewById(R.id.login_progress).animate().setDuration(shortAnimTime).alpha(1);
         listemiz.addFooterView(list_footer_view);
+
+        AnimationDrawable animationDrawable;
+        ImageView mProgressBar=list_footer_view.findViewById(R.id.login_progress);
+        mProgressBar.setBackgroundResource(R.drawable.loader);
+        animationDrawable = (AnimationDrawable)mProgressBar.getBackground();
+        animationDrawable.start();
+
         listemiz.setSelection(listemiz.getLastVisiblePosition());
         listemiz.setEnabled(false);
         swip.setEnabled(false);
+
+        mProgressBar=null;
+        animationDrawable=null;
+
 
 
 

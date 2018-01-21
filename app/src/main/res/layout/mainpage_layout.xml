@@ -17,14 +17,6 @@
         >
 
 
-        <ImageView
-            android:layout_width="75dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            app:srcCompat="@mipmap/marti"
-            android:id="@+id/toolbar_title" />
-
-
     </android.support.v7.widget.Toolbar>
 
     <FrameLayout
@@ -52,4 +44,14 @@
         app:itemIconTint="@color/BottomTextColor"
         app:itemTextColor="@color/BottomTextColor"
         app:menu="@menu/bottom_navigation_items"/>
+
+    <ImageView
+        android:id="@+id/toolbar_title"
+        android:layout_width="75dp"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        app:srcCompat="@mipmap/marti" />
 </RelativeLayout>

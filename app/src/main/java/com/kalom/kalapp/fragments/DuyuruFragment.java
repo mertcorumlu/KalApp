@@ -2,15 +2,18 @@ package com.kalom.kalapp.fragments;
 
 
 import android.annotation.SuppressLint;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -142,9 +145,18 @@ public class DuyuruFragment extends Fragment {
     }
 
     protected void showloader(){
-        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-        list_footer_view.findViewById(R.id.login_progress).animate().setDuration(shortAnimTime).alpha(1);
+
+
+
+
         listemiz.addFooterView(list_footer_view);
+
+        AnimationDrawable animationDrawable;
+        ImageView mProgressBar=list_footer_view.findViewById(R.id.login_progress);
+        mProgressBar.setBackgroundResource(R.drawable.loader);
+        animationDrawable = (AnimationDrawable)mProgressBar.getBackground();
+        animationDrawable.start();
+
         listemiz.setSelection(listemiz.getLastVisiblePosition());
         listemiz.setEnabled(false);
         swip.setEnabled(false);
@@ -154,6 +166,7 @@ public class DuyuruFragment extends Fragment {
     }
 
     protected void hideloader(){
+
         listemiz.removeFooterView(list_footer_view);
         listemiz.setEnabled(true);
         swip.setEnabled(true);
@@ -175,6 +188,7 @@ public class DuyuruFragment extends Fragment {
         fnsh=Config.duyuru_load_one_time;
         us.execute();
     }
+
 
 
 
@@ -225,11 +239,9 @@ public class DuyuruFragment extends Fragment {
             try {
 
                 JSONArray ar = new JSONArray(result);
-
-
                 for(int i = 0; i< ar.length(); ++i){
                     try {
-                        JSONObject obj = (JSONObject) ar.get(i);
+                        JSONObject obj = ar.getJSONObject(i);
                         duyurular.add(new Duyuru(
                                 Integer.parseInt(obj.get("id").toString()),
                                 obj.get("yazar").toString(),

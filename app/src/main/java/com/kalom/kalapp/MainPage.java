@@ -119,10 +119,6 @@ public  class MainPage extends AppCompatActivity {
                                 break;
 
 
-
-                            case R.id.action_item4:
-                                selectedFragment = DuyuruFragment.newInstance();
-                                break;
                         }
 
 
@@ -130,7 +126,7 @@ public  class MainPage extends AppCompatActivity {
                         transaction.replace(R.id.frame_layout, selectedFragment);
                         transaction.commit();
 
-
+                        check_login();
                         return true;
 
                     }
@@ -140,8 +136,8 @@ public  class MainPage extends AppCompatActivity {
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         frag1= DuyuruFragment.newInstance();
-        frag2=AnketFragment.newInstance();
-        transaction.replace(R.id.frame_layout,frag2);
+        //frag2=AnketFragment.newInstance();
+        transaction.replace(R.id.frame_layout,frag1);
         transaction.commit();
 
         //Used to select an item programmatically
@@ -154,6 +150,18 @@ public  class MainPage extends AppCompatActivity {
 
         Log.d("MESAJ","Uygulama Yeniden Başlamış");
 
+        check_login();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // sistemden çıkma
+        EventBus.getDefault().unregister(this);
+    }
+
+    private void check_login(){
         //Shared Preferences İçinde Tutulacak Olan Login Hash İçin Kütüphane
         SessionManager session = new SessionManager(getApplicationContext());
 
@@ -243,14 +251,6 @@ public  class MainPage extends AppCompatActivity {
             e.getMessage();
             Log.d("MESAJ","Sunucudan Alınan Bilgiler Alınırken Bir Hata Oluştu..");
         }
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // sistemden çıkma
-        EventBus.getDefault().unregister(this);
     }
 
     @SuppressLint("StaticFieldLeak")
