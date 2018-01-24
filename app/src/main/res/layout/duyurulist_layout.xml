@@ -1,27 +1,36 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/transparent"
-    android:orientation="horizontal"
-
+    android:layout_marginBottom="8dp"
     >
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:background="@drawable/duyuru_background"
-        android:orientation="horizontal"
-        android:padding="25dp"
-        android:layout_margin="3dp"
+        android:paddingBottom="35dp"
         >
+
+
+        <RelativeLayout
+            android:id="@+id/test1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+
+            >
 
         <RelativeLayout
             android:id="@+id/test"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            >
 
 
             <LinearLayout
@@ -30,18 +39,15 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp"
-                android:padding="3dp"
-
-                >
+                android:layout_marginEnd="12dp"
+                android:layout_marginRight="12dp">
 
                 <ImageView
                     android:id="@+id/list_image"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:contentDescription="@string/description"
-                    android:src="@drawable/l1" />
+                    android:background="@drawable/list_img_background"
+                    android:contentDescription="@string/description" />
 
             </LinearLayout>
 
@@ -50,30 +56,94 @@
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/thumbnail"
+                android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/thumbnail"
                 android:layout_toRightOf="@+id/thumbnail"
-
-                android:textColor="#040404"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:typeface="sans" />
+                android:fontFamily="sans-serif"
+                android:text="________"
+                android:textAllCaps="false"
+                android:textColor="#212121"
+                android:textSize="23sp"
+                android:textStyle="bold" />
 
 
             <TextView
                 android:id="@+id/yazar"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/title"
-                android:layout_marginTop="1dp"
-                android:layout_toEndOf="@+id/thumbnail"
-                android:layout_toRightOf="@+id/thumbnail"
-                android:textColor="#343434"
-                android:textSize="12sp"
+                android:layout_alignLeft="@+id/title"
+                android:layout_alignStart="@+id/title"
+                android:layout_below="@+id/title"
+                android:layout_marginTop="-5dp"
+                android:lineSpacingExtra="0dp"
+                android:text="_____"
+                android:textColor="#757575"
+                android:textSize="14sp" />
 
-                />
+
 
         </RelativeLayout>
+
+
+            <ImageView
+                android:padding="5dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                app:srcCompat="@drawable/three_dot"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:clickable="true"
+                android:tint="#BDBDBD"
+                android:background="@drawable/sel"
+                android:focusable="true" />
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/divider"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="4dp"
+            android:layout_marginRight="19dp"
+            android:text="_______"
+            android:textColor="#514F4F"
+            android:textSize="12sp"
+            android:layout_marginEnd="19dp" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/test1"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="#95989A"
+
+            />
+
+
+
+        <ImageView
+            android:id="@+id/content_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="200dp"
+            android:gravity="center"
+            android:scaleType="center"
+            android:layout_below="@+id/divider"
+            android:background="#BDBDBD"
+            android:visibility="visible"
+            android:fitsSystemWindows="true"
+            />
 
         <TextView
             android:id="@+id/content"
@@ -81,15 +151,18 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/test"
-            android:layout_margin="5dp"
+            android:layout_below="@+id/content_img"
             android:minHeight="50dp"
-            android:textSize="16sp" />
+            android:paddingRight="25dp"
+            android:paddingLeft="25dp"
+            android:paddingTop="18dp"
+            android:text="_________________"
+            android:textSize="18sp" />
+
+
 
 
     </RelativeLayout>
 
 
-
-
-</RelativeLayout>
+</LinearLayout>

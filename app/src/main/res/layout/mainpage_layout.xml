@@ -7,34 +7,51 @@
     android:layout_height="match_parent"
     tools:context="com.kalom.kalapp.MainPage">
 
-
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="#fff"
-        app:popupTheme="@style/AppTheme.PopupOverlay"
+        android:layout_height="wrap_content"
+        android:background="@color/toolbar_background"
         >
-
 
     </android.support.v7.widget.Toolbar>
 
+
     <FrameLayout
-        android:background="#f5f5f5"
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/toolbar"
-        android:layout_above="@+id/navigation"
-        >
+        android:animateLayoutChanges="true"
+        android:background="@color/duyuru_background">
 
     </FrameLayout>
-    <!--#e8e8e8-->
 
+    <ImageView
+        android:id="@+id/toolbar_title"
+        android:layout_width="53dp"
+        android:layout_height="53dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:padding="7dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="14dp"
+        android:layout_marginStart="14dp"
+        app:srcCompat="@mipmap/marti" />
 
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/toolbar_title"
+        android:background="@drawable/toolbar_background" />
 
-
+<!--
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="match_parent"
@@ -43,15 +60,9 @@
         android:background="#fff"
         app:itemIconTint="@color/BottomTextColor"
         app:itemTextColor="@color/BottomTextColor"
-        app:menu="@menu/bottom_navigation_items"/>
+        app:menu="@mmain_menutems"
+        android:visibility="gone"
+        />-->
 
-    <ImageView
-        android:id="@+id/toolbar_title"
-        android:layout_width="75dp"
-        android:layout_height="40dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        android:layout_marginTop="8dp"
-        app:srcCompat="@mipmap/marti" />
+
 </RelativeLayout>

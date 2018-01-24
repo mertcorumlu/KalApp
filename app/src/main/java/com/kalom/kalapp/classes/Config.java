@@ -2,7 +2,7 @@ package com.kalom.kalapp.classes;
 
 
 public class Config {
-    public static final String api_server= "http://46.101.122.232/";
+    public static final String api_server= "http://192.168.1.148/";
 
         /*
          * DUYURU AYAR

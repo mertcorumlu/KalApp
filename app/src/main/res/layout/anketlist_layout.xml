@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="@android:color/transparent"
     android:orientation="horizontal"
 
@@ -45,7 +45,7 @@
                     android:adjustViewBounds="false"
                     android:contentDescription="@string/description"
                     android:cropToPadding="false"
-                    android:src="@drawable/l1" />
+                    app:srcCompat="@drawable/survey_icon" />
 
             </LinearLayout>
 
@@ -58,7 +58,7 @@
                 android:layout_toEndOf="@+id/thumbnail"
                 android:layout_toRightOf="@+id/thumbnail"
 
-                android:text="BU BİR TEST YAZSIDIR"
+                android:text="Test Anketi"
                 android:textColor="#040404"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -78,10 +78,13 @@
 
         </RelativeLayout>
 
+
+
+
         <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:id="@+id/voted_img"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -90,6 +93,17 @@
             android:contentDescription="@string/description"
             android:cropToPadding="true"
             app:srcCompat="@drawable/right_arrow" />
+
+        <TextView
+            android:id="@+id/info_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/voted_img"
+            android:layout_toStartOf="@+id/voted_img"
+            android:padding="2dp"
+            android:text="@string/ankete_katil"
+            android:textSize="13sp" />
 
 
     </RelativeLayout>

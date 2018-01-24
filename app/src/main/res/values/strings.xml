@@ -31,7 +31,8 @@
 
     <!-- CONFIG-->
     <string name="int_yok">Şu Anda Verilerini Yüklemek İçin Sunucuyla Bağlantı Kuramıyoruz.Lütfen İnternet Bağlantını Kontrol Et.</string>
-
+    <string name="filter_icon">Filter_Icon</string>
+    <string name="ankete_katil">KATIL</string>
 
 
     <item name="visible" type="id"/>

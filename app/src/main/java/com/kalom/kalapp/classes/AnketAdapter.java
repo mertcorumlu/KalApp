@@ -1,18 +1,21 @@
 package com.kalom.kalapp.classes;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.kalom.kalapp.AnketActivity;
+
+import com.kalom.kalapp.AnketWebviewActivity;
 import com.kalom.kalapp.R;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -20,103 +23,172 @@ import com.koushikdutta.ion.Ion;
 import java.util.List;
 
 
-public class AnketAdapter extends BaseAdapter {
+public class AnketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final LayoutInflater mInflater;
-    private final List<Anket> mAnketler;
-    private final Context mCon;
-    private boolean isopened;
+    private List<Anket> anketlerList;
 
-    public AnketAdapter(Activity activity, List<Anket> anketler, Context con){
+    private final int VIEW_TYPE_ITEM = 0;
+    private final int VIEW_TYPE_LOADING = 1;
 
+    private OnLoadMoreListener mOnLoadMoreListener;
+
+    private boolean isLoading;
+    private int lastVisibleItem, totalItemCount,visibleCount;
+
+    private Context mCon;
+
+    public AnketAdapter(List<Anket> uyeler,RecyclerView mRecyclerView,Context con) {
         mCon=con;
 
-        mInflater=(LayoutInflater) activity.getSystemService(
-                Context.LAYOUT_INFLATER_SERVICE);
+        final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
-        mAnketler =anketler;
 
+                                              @Override
+                                              public void onScrolled(RecyclerView recyclerView, int newState , int b) {
+
+                                                  totalItemCount = linearLayoutManager.getItemCount();
+                                                  lastVisibleItem = linearLayoutManager
+                                                          .findLastVisibleItemPosition();
+
+                                                  if (!isLoading && !recyclerView.canScrollVertically(1) ) {
+                                                      if (mOnLoadMoreListener != null) {
+
+                                                          mOnLoadMoreListener.onLoadMore();
+                                                      }
+                                                      isLoading = true;
+
+                                                  }
+                                              }
+
+
+
+
+
+                                          }
+
+
+
+        );
+
+
+        anketlerList = uyeler;
     }
 
     @Override
-    public int getCount() {
-        return mAnketler.size();
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == VIEW_TYPE_ITEM) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.anketlist_layout, parent, false);
+            return new AnketHolder(view);
+        } else if (viewType == VIEW_TYPE_LOADING) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_footer, parent, false);
+            return new LoadingViewHolder(view);
+        }
+        return null;
     }
 
     @Override
-    public Anket getItem(int i) {
-        return mAnketler.get(i);
-    }
+    public void onBindViewHolder(final RecyclerView.ViewHolder out, int position) {
+
+        if (out instanceof AnketHolder) {
+
+            final Anket ank = anketlerList.get(position);
+            final AnketHolder holder=(AnketHolder) out;
+
+            holder.title.setText(ank.getBaslik());
+            holder.yazar.setText(ank.getYazar());
+
+            if(ank.isVoted()){
+                holder.list_image.setImageResource(R.drawable.survey_icon_black);
+                holder.list_image.setColorFilter(Color.parseColor("#7F7F7F"));
+
+                holder.title.setTextColor(Color.parseColor("#7F7F7F"));
+                holder.yazar.setTextColor(Color.parseColor("#7F7F7F"));
+
+                holder.info_text.setText("SONUÇLAR");
 
 
 
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-
-
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        View satir;
-
-        satir=mInflater.inflate(R.layout.anketlist_layout, null);
-
-
-        final Anket anket= mAnketler.get(i);
-
-
-        TextView baslik= satir.findViewById(R.id.title);
-        baslik.setText(anket.getBaslik());
-
-        TextView prebaslik= satir.findViewById(R.id.yazar);
-        prebaslik.setText(anket.getYazar());
-
-        RelativeLayout rel=satir.findViewById(R.id.relativeLayout);
-        rel.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Intent intent = new Intent(mCon, AnketActivity.class);
-                intent.putExtra("anket_id",anket.getID());
-                mCon.startActivity(intent);
             }
-        });
 
-        final ImageView imageView = satir.findViewById(R.id.list_image);
+            holder.rel.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    Intent intent = new Intent(v.getContext(), AnketWebviewActivity.class);
+                    intent.putExtra("anket_id",ank.getID());
+                    v.getContext().startActivity(intent);
+                }
+            });
 
-        AnimationDrawable animationDrawable;
-        imageView.setBackgroundResource(R.drawable.spin_loader);
-        animationDrawable = (AnimationDrawable)imageView.getBackground();
-        animationDrawable.start();
+        }else if (out instanceof LoadingViewHolder) {
+            LoadingViewHolder loadingViewHolder = (LoadingViewHolder) out;
+            loadingViewHolder.progressBar.setBackgroundResource(R.drawable.loader);
 
-        Ion.with(imageView)
-                .error(R.drawable.danger)
-                .load(anket.getImg())
-                .setCallback(new FutureCallback<ImageView>() {
-                    @Override
-                    public void onCompleted(Exception e, ImageView result) {
-                        imageView.setBackground(null);
-                    }
-
-                });
-
-        if(anket.isVoted()){
-            ImageView voted_image=satir.findViewById(R.id.imageView);
-            voted_image.setImageResource(R.drawable.check_icon);
+            loadingViewHolder.draw = (AnimationDrawable) loadingViewHolder.progressBar.getBackground();
+            loadingViewHolder.draw.start();
         }
 
 
 
-        /*
-        final TextView icerik= satir.findViewById(R.id.content);
-        final String str_icerik=anket.getIcerik();
-        icerik.setText(str_icerik);*/
-        return satir;
+    }
+
+
+    public void setOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
+        this.mOnLoadMoreListener = mOnLoadMoreListener;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return anketlerList.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+    }
+
+    static class AnketHolder extends ViewHolder {
+
+        public final TextView title;
+        public final TextView yazar;
+        public final TextView info_text;
+        public final RelativeLayout rel;
+        public final ImageView list_image;
+       // public final ImageView voted_image;
+
+        AnimationDrawable animationDrawable;
+
+
+        public AnketHolder(final View view) {
+            super(view);
+
+            title = view.findViewById(R.id.title);
+            yazar = view.findViewById(R.id.yazar);
+            info_text = view.findViewById(R.id.info_text);
+            rel = view.findViewById(R.id.relativeLayout);
+            list_image = view.findViewById(R.id.list_image);
+            //voted_image=view.findViewById(R.id.voted_img);
+
+        }
+    }
+
+    static class LoadingViewHolder extends ViewHolder {
+        public ImageView progressBar;
+        public AnimationDrawable draw;
+
+        public LoadingViewHolder(View itemView) {
+            super(itemView);
+            progressBar =  itemView.findViewById(R.id.login_progress);
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return anketlerList == null ? 0 : anketlerList.size();
+    }
+
+    public void setLoaded() {
+        isLoading = false;
+    }
+
+    public void setLoading() {
+        isLoading = true;
     }
 
 
 }
-
-

@@ -2,28 +2,28 @@ package com.kalom.kalapp.fragments;
 
 
 import android.annotation.SuppressLint;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import com.kalom.kalapp.MainActivity;
 import com.kalom.kalapp.R;
 import com.kalom.kalapp.classes.Config;
 import com.kalom.kalapp.classes.Duyuru;
 import com.kalom.kalapp.classes.DuyuruAdapter;
 import com.kalom.kalapp.classes.JSONParser;
 import com.kalom.kalapp.classes.SessionManager;
+import com.kalom.kalapp.classes.OnLoadMoreListener;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,10 +36,10 @@ import java.util.List;
 
 public class DuyuruFragment extends Fragment {
 
-    private DuyuruAdapter adapter=null;
+    private DuyuruAdapter adapter;
     private DuyuruInfo us;
-    private ListView listemiz;
-    private View list_footer_view;
+    private RecyclerView listemiz;
+    private ImageView list_footer_view;
     private CoordinatorLayout coordinatorLayout;
     private SwipeRefreshLayout swip;
 
@@ -59,9 +59,6 @@ public class DuyuruFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         session = new SessionManager(getContext());
-
-
-
     }
 
 
@@ -73,110 +70,49 @@ public class DuyuruFragment extends Fragment {
          final View rootView = inflater.inflate(R.layout.duyurufragment_layout,
                 container, false);
 
-          listemiz=rootView.findViewById(R.id.listView1);
-          list_footer_view = ((LayoutInflater) getContext().getSystemService(MainActivity.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.list_footer, null, false);
+        CardView card=rootView.findViewById(R.id.search_query_section);
+        card.setBackgroundResource(R.drawable.searchbar_radius_background);
+        card.setUseCompatPadding(false);
 
-            swip=rootView.findViewById(R.id.swiperefresh);
+        listemiz=rootView.findViewById(R.id.listView1);
+        swip=rootView.findViewById(R.id.swiperefresh);
 
-        listemiz.setSmoothScrollbarEnabled(true);
-
-        adapter=new DuyuruAdapter(getActivity(),duyurular);
-
-        listemiz.addFooterView(list_footer_view);
+        listemiz.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter=new DuyuruAdapter(duyurular,listemiz);
         listemiz.setAdapter(adapter);
-        listemiz.removeFooterView(list_footer_view);
-
 
         us=new DuyuruInfo();
         us.execute();
 
+        adapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
 
-
-
-        swip.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
+                listemiz.post(new Runnable() {
                     @Override
-                    public void onRefresh() {
-                        refresh();
-                        swip.setRefreshing(false);
+                    public void run() {
+
+                       us=new DuyuruInfo();
+                       us.execute();
 
                     }
-                }
-        );
-
-
-
-
-        listemiz.setOnScrollListener(new AbsListView.OnScrollListener() {
-
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-
-                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE
-                        && (listemiz.getLastVisiblePosition() - listemiz.getHeaderViewsCount() -
-                        listemiz.getFooterViewsCount()) >= (adapter.getCount()-1)) {
-
-                    us=new DuyuruInfo();
-                    us.execute();
-
-                }
-
-                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE
-                        &&listemiz.getFirstVisiblePosition() == 0 && refreshed) {
-
-                    refresh();
-                    listemiz.setSelection(0);
-                    refreshed=false;
-                }
-
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
+                });
             }
         });
 
 
+         swip.setOnRefreshListener(
+                    new SwipeRefreshLayout.OnRefreshListener() {
+                        @Override
+                        public void onRefresh() {
+                            refresh();
+                            swip.setRefreshing(false);
+                        }
+                    }
+            );
+
+
         return rootView;
-
-    }
-
-    protected void showloader(){
-
-
-
-
-        listemiz.addFooterView(list_footer_view);
-
-        AnimationDrawable animationDrawable;
-        ImageView mProgressBar=list_footer_view.findViewById(R.id.login_progress);
-        mProgressBar.setBackgroundResource(R.drawable.loader);
-        animationDrawable = (AnimationDrawable)mProgressBar.getBackground();
-        animationDrawable.start();
-
-        listemiz.setSelection(listemiz.getLastVisiblePosition());
-        listemiz.setEnabled(false);
-        swip.setEnabled(false);
-
-
-
-    }
-
-    protected void hideloader(){
-
-        listemiz.removeFooterView(list_footer_view);
-        listemiz.setEnabled(true);
-        swip.setEnabled(true);
-
-
-    }
-
-    public void scrolltoTop(){
-
-        listemiz.smoothScrollToPosition(0);
 
     }
 
@@ -197,13 +133,14 @@ public class DuyuruFragment extends Fragment {
 
         @Override
         protected void onPreExecute(){
-
-            showloader();
-
+            duyurular.add(null);
+            adapter.notifyItemInserted(duyurular.size()-1);
+            adapter.setLoading();
         }
 
         @Override
         protected String doInBackground(Void... params) {
+
 
 
             // Simulate network access.
@@ -211,24 +148,22 @@ public class DuyuruFragment extends Fragment {
 
             try{
 
-
-
                 String api_call= Config.api_server+"?action=duyuru&hash="+session.getToken()+"&s="+str +"&f="+fnsh;
                 str=fnsh;
                 fnsh+=Config.duyuru_load_one_time;
                 return js.JsonString(api_call);
 
-
-
             }catch(IOException e){
                 e.getMessage();
                 return null;
             }
+
         }
 
         @Override
         protected void onPostExecute(String result){
-           hideloader();
+            duyurular.remove(duyurular.size()-1);
+
             if(result==null){
 
                 Toast.makeText(getContext(),"INTERNET YOK",Toast.LENGTH_LONG).show();
@@ -238,25 +173,39 @@ public class DuyuruFragment extends Fragment {
 
             try {
 
+
                 JSONArray ar = new JSONArray(result);
-                for(int i = 0; i< ar.length(); ++i){
-                    try {
-                        JSONObject obj = ar.getJSONObject(i);
-                        duyurular.add(new Duyuru(
-                                Integer.parseInt(obj.get("id").toString()),
-                                obj.get("yazar").toString(),
-                                obj.get("title").toString(),
-                                obj.get("content").toString(),
-                                obj.get("img_url").toString()
-                        ));
+
+                if(ar.length()!=0){
 
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
 
-                        return;
+                    for(int i = 0; i< ar.length(); ++i){
+                        try {
+                            JSONObject obj = ar.getJSONObject(i);
+                            duyurular.add(new Duyuru(
+                                    Integer.parseInt(obj.get("id").toString()),
+                                    obj.get("yazar").toString(),
+                                    obj.get("title").toString(),
+                                    obj.get("content").toString(),
+                                    obj.get("img_url").toString(),
+                                    obj.get("content_img").toString(),
+                                    obj.get("date").toString()
+                            ));
+
+
+                        } catch (JSONException e) {
+
+                            e.printStackTrace();
+
+                            return;
+                        }
+
                     }
 
+
+
+                    adapter.setLoaded();
                 }
 
                 adapter.notifyDataSetChanged();

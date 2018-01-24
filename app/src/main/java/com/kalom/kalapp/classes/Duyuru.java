@@ -5,15 +5,19 @@ public class Duyuru {
     private String Yazar;
     private String Baslik;
     private String Icerik;
-    private final String Image;
+    private String yazarImage;
+    private String contentImage;
+    private String date;
     private int ID;
 
-    public Duyuru(int mID,String mYazar,String mBaslik,String mIcerik,String Image_url){
-        ID=mID;
-        Yazar =mYazar;
-        Baslik=mBaslik;
-        Icerik=mIcerik;
-        Image=Image_url;
+    public Duyuru(int mID,String mYazar,String mBaslik,String mIcerik,String myazarImage,String mcontentImage,String mDate){
+        setID(mID);
+        setYazar(mYazar);
+        setBaslik(mBaslik);
+        setIcerik(mIcerik);
+        setYazarImage(myazarImage);
+        setContentImage(mcontentImage);
+        setDate(mDate);
     }
 
 
@@ -41,12 +45,37 @@ public class Duyuru {
         Icerik = icerik;
     }
 
-    public String getImg() {
-        return Image;
+    public int getID() {
+        return ID;
     }
 
+    public void setID(int ID) {
+        this.ID = ID;
+    }
 
+    public String getContentImage() {
+        return contentImage;
+    }
 
+    public void setContentImage(String contentImage) {
+        this.contentImage = contentImage;
+    }
+
+    public String getYazarImage() {
+        return yazarImage;
+    }
+
+    public void setYazarImage(String yazarImage) {
+        this.yazarImage = yazarImage;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 }
 
 

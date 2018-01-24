@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -13,13 +12,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.kalom.kalapp.classes.Config;
 import com.kalom.kalapp.classes.JSONParser;
 import com.kalom.kalapp.classes.SessionManager;
 import com.kalom.kalapp.fragments.*;
 
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import org.greenrobot.eventbus.EventBus;
@@ -38,6 +37,7 @@ public  class MainPage extends AppCompatActivity {
 
     @Subscribe
     public void onEvent(String d) {
+        /*
         Log.d("MESAJ","BOTTOM ŞEYSİ DEĞİŞTİ");
 
         switch(d){
@@ -47,7 +47,7 @@ public  class MainPage extends AppCompatActivity {
                     bottomNavigationView.post(new Runnable() {
                         @Override
                         public void run() {
-                            bottomNavigationView.getMenu().findItem(R.id.action_item1).setIcon(R.mipmap.marti);
+                            //bottomNavigationView.getMenu().findItem(R.id.action_item1).setIcon(R.mipmap.marti);
                             ((DuyuruFragment) frag1).refreshed=true;
                         }
                     });
@@ -56,9 +56,10 @@ public  class MainPage extends AppCompatActivity {
 
         }
 
-
+*/
 
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,16 +68,13 @@ public  class MainPage extends AppCompatActivity {
 
        EventBus.getDefault().register(this);
 
-       Log.d("FIREE", FirebaseInstanceId.getInstance().getToken());
-
-
-        bottomNavigationView = findViewById(R.id.navigation);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        /*
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -92,7 +90,6 @@ public  class MainPage extends AppCompatActivity {
 
                                     selectedFragment = frag1;
                                     bottomNavigationView.getMenu().findItem(R.id.action_item1).setIcon(R.drawable.ic_account_box_black_24dp);
-                                    ((DuyuruFragment) selectedFragment).scrolltoTop();
 
                                 }else{
                                     frag1= DuyuruFragment.newInstance();
@@ -104,10 +101,10 @@ public  class MainPage extends AppCompatActivity {
                             case R.id.action_item2:
                                 if(frag2!=null){
                                     selectedFragment = frag2;
-                                    ((AnketFragment) selectedFragment).scrolltoTop();
+                                    ((AnketActivity) selectedFragment).scrolltoTop();
 
                                 }else{
-                                    frag2= AnketFragment.newInstance();
+                                    frag2= AnketActivity.newInstance();
                                     selectedFragment = frag2;
 
                                 }
@@ -130,18 +127,41 @@ public  class MainPage extends AppCompatActivity {
                         return true;
 
                     }
-                });
+                });*/
 
         //Manually displaying the first fragment - one time only
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         frag1= DuyuruFragment.newInstance();
-        //frag2=AnketFragment.newInstance();
         transaction.replace(R.id.frame_layout,frag1);
         transaction.commit();
 
         //Used to select an item programmatically
         //bottomNavigationView.getMenu().getItem(2).setChecked(true);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.anketler:
+                Intent intent = new Intent(this, AnketActivity.class);
+                this.startActivity(intent);
+                break;
+
+
+
+
+        }
+        return true;
     }
 
     @Override
