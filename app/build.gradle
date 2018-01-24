@@ -38,7 +38,6 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.koushikdutta.ion:ion:2.2.1'
     compile 'com.github.arimorty:floatingsearchview:2.1.1'
-
 }
 
 

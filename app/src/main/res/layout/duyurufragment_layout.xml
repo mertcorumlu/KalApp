@@ -13,7 +13,7 @@
         android:fitsSystemWindows="true"
         android:orientation="vertical"
         android:theme="@style/AppTheme.AppBarOverlay"
-        app:expanded="false">
+        app:expanded="true">
 
 
         <android.support.design.widget.CollapsingToolbarLayout
@@ -55,14 +55,14 @@
                         app:floatingSearch_dimBackground="false"
                         app:floatingSearch_dismissOnOutsideTouch="true"
                         app:floatingSearch_leftActionMode="showSearch"
-                        app:floatingSearch_menu="@menu/logged__in"
+                        app:floatingSearch_menu="@menu/menu_search"
                         app:floatingSearch_searchBarMarginLeft="35dp"
                         app:floatingSearch_searchBarMarginRight="35dp"
                         app:floatingSearch_searchBarMarginTop="15dp"
-                        app:floatingSearch_searchHint="Search..."
-                        app:floatingSearch_showSearchKey="false"
+                        app:floatingSearch_searchHint="Ara..."
+                        app:floatingSearch_showSearchKey="true"
                         app:floatingSearch_suggestionsListAnimDuration="250"
-                        app:layout_collapseMode="parallax">
+                       >
 
 
                     </com.arlib.floatingsearchview.FloatingSearchView>

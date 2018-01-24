@@ -1,23 +1,21 @@
 package com.kalom.kalapp.classes;
 
-import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import com.kalom.kalapp.R;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 import java.util.List;
+
 
 
 public class DuyuruAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -29,7 +27,7 @@ public class DuyuruAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private OnLoadMoreListener mOnLoadMoreListener;
 
-    private boolean isLoading;
+    public boolean isLoading;
     private int lastVisibleItem, totalItemCount,visibleCount;
 
     public DuyuruAdapter(List<Duyuru> uyeler,RecyclerView mRecyclerView) {
@@ -60,8 +58,6 @@ public class DuyuruAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
 
         }
-
-
 
         );
 
@@ -101,13 +97,12 @@ public class DuyuruAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
                 Ion.with(holder.content_image)
                         .error(R.drawable.danger)
+                        .deepZoom()
                         .load(duyuru.getContentImage());
-                holder.content_image.setVisibility(View.VISIBLE);
-            }
 
-            holder.yazar_image.setBackgroundResource(R.drawable.spin_loader);
-            holder.animationDrawable = (AnimationDrawable) holder.yazar_image.getBackground();
-            holder.animationDrawable.start();
+                holder.content_image.setVisibility(View.VISIBLE);
+
+            }
 
             Ion.with(holder.yazar_image)
                     .error(R.drawable.danger)
@@ -117,8 +112,8 @@ public class DuyuruAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         public void onCompleted(Exception e, ImageView result) {
                             holder.yazar_image.setBackground(null);
                         }
-
-                    });
+                    })
+            ;
 
         }else if (out instanceof LoadingViewHolder) {
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) out;
