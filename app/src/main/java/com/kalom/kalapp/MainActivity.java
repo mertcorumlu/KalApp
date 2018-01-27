@@ -2,34 +2,29 @@ package com.kalom.kalapp;
 
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 
 import com.kalom.kalapp.classes.Config;
 import com.kalom.kalapp.fragments.DuyuruFragment;
+import com.koushikdutta.ion.Ion;
 
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 
 
-public  class MainActivity extends AppCompatActivity {
+public  class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private JSONObject userInfo;
+    private ImageView profileImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +36,16 @@ public  class MainActivity extends AppCompatActivity {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         setContentView(R.layout.mainactivity_layout);
+
+        ImageView anketImage = findViewById(R.id.anket_image);
+        profileImage = findViewById(R.id.profile_img);
+
+        load_profile_img();
+
+        anketImage.setOnClickListener(this);
+        profileImage.setOnClickListener(this);
+
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -54,62 +59,40 @@ public  class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-
+    public void load_profile_img(){
         try {
-            if(!userInfo.get("img_url").toString().equals("null")){
-
-                final MenuItem item =menu.findItem(R.id.profil);
-
-                LoadImage load = new LoadImage();
-                Bitmap bitmap = load.execute(userInfo.get("img_url").toString()).get();
-                RoundedBitmapDrawable dr =
-                        RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), Bitmap.createScaledBitmap(bitmap, 150, 150, false));
-                dr.setCircular(true);
-
-                item.setIcon(dr);
-
-
-
-            }
-        } catch (Exception e) {
+            Ion.with(profileImage)
+                    .load(userInfo.get("img_url").toString());
+        } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
-        return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public void onClick(View v) {
 
-        switch (item.getItemId()) {
+        switch (v.getId()) {
 
-            case R.id.anketler:
+            case R.id.anket_image:
                 Intent intentAnket = new Intent(this, AnketActivity.class);
                 this.startActivity(intentAnket);
                 break;
 
-            case R.id.profil:
+            case R.id.profile_img:
                 Intent intentProfil = new Intent(this, ProfilActivity.class);
+                intentProfil.putExtra("user_info",userInfo.toString());
                 this.startActivity(intentProfil);
                 break;
 
-
-
-
-
         }
-        return true;
+
     }
 
     @Override
     protected void onResume(){
         super.onResume();
-        Config.check_login(this);
+        userInfo = Config.check_login(this);
+        load_profile_img();
     }
 
     @Override
@@ -119,18 +102,4 @@ public  class MainActivity extends AppCompatActivity {
 
     }
 
-    private static class LoadImage  extends AsyncTask<String, String, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            Bitmap bitmap = null;
-            try {
-                URL url = new URL(params[0]);
-                bitmap = BitmapFactory.decodeStream((InputStream)url.getContent());
-            } catch (IOException e) {
-               e.printStackTrace();
-            }
-            return bitmap;
-        }
-
-    }
 }

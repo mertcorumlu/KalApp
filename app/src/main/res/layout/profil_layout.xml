@@ -50,13 +50,13 @@
                             android:id="@+id/profile_img"
                             android:layout_width="100dp"
                             android:layout_height="100dp"
-                            android:src="@mipmap/marti"
+                            android:src="@mipmap/user"
                             android:layout_gravity="center"
                             android:layout_margin="10dp"
                             android:clickable="true"
                             android:focusable="true"
                             app:riv_oval="true"
-                            android:background="@drawable/sel"
+                            android:background="@drawable/clickable_background"
                             />
 
                         <TextView
@@ -70,7 +70,7 @@
                             android:textStyle="bold"
                             android:clickable="true"
                             android:focusable="true"
-                            android:background="@drawable/sel"
+                            android:background="@drawable/clickable_background"
                             />
 
 

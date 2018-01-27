@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 
 import com.kalom.kalapp.classes.Config;
+import com.kalom.kalapp.classes.SessionManager;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -36,6 +37,7 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -65,6 +67,14 @@ public class ProfilActivity extends AppCompatActivity implements View.OnClickLis
 
         profileImage = findViewById(R.id.profile_img);
         changeProfileImage = findViewById(R.id.change_profile_img);
+
+        try {
+            Ion.with(profileImage)
+                    .load(UserInfo.get("img_url").toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
         profileImage.setOnClickListener(this);
         changeProfileImage.setOnClickListener(this);
@@ -133,7 +143,7 @@ public class ProfilActivity extends AppCompatActivity implements View.OnClickLis
             case android.R.id.home:
                 onBackPressed();
                 break;
-            
+
         }
         return true;
     }
@@ -161,6 +171,7 @@ public class ProfilActivity extends AppCompatActivity implements View.OnClickLis
 
         @Override
         protected String doInBackground(Void... voids) {
+            SessionManager session = new SessionManager(getApplicationContext());
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             image.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
@@ -169,8 +180,9 @@ public class ProfilActivity extends AppCompatActivity implements View.OnClickLis
             ArrayList<NameValuePair> dataToSend = new ArrayList<>();
             dataToSend.add(new BasicNameValuePair("image",encodedImage));
 
+
             HttpClient client = new DefaultHttpClient(getHttpRequestParams());
-            HttpPost post = new HttpPost(Config.api_server+"test.php");
+            HttpPost post = new HttpPost(Config.api_server + "?action=upload_profile_image&hash=" + session.getToken());
 
             try {
                 post.setEntity(new UrlEncodedFormEntity(dataToSend));
@@ -189,15 +201,16 @@ public class ProfilActivity extends AppCompatActivity implements View.OnClickLis
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            Ion.with(getApplicationContext())
-                    .load(Config.api_server +"b.jpg")
-                    .noCache()
-                    .intoImageView(profileImage).setCallback(new FutureCallback<ImageView>() {
-                @Override
-                public void onCompleted(Exception e, ImageView result) {
-                    //profileImage.setBackground(null);
+            try {
+                JSONObject response=new JSONObject(result);
+                if(response.get("error").equals(false)){
+                    profileImage.setImageBitmap(image);
+                }else{
+                    Toast.makeText(getApplicationContext(),response.get("message").toString(),Toast.LENGTH_LONG).show();
                 }
-            });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         private HttpParams getHttpRequestParams(){

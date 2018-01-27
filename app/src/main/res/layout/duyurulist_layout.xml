@@ -42,10 +42,11 @@
                 android:layout_marginEnd="12dp"
                 android:layout_marginRight="12dp">
 
-                <ImageView
+                <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/list_image"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    app:riv_oval="true"
                     android:background="@drawable/list_img_background"
                     android:contentDescription="@string/description" />
 
@@ -95,7 +96,7 @@
                 android:layout_alignParentEnd="true"
                 android:clickable="true"
                 android:tint="#BDBDBD"
-                android:background="@drawable/sel"
+                android:background="@drawable/clickable_background"
                 android:focusable="true" />
 
 
@@ -136,11 +137,12 @@
             android:id="@+id/content_img"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:minHeight="200dp"
             android:gravity="center"
-            android:scaleType="center"
+            android:scaleType="centerCrop"
             android:layout_below="@+id/divider"
-            android:background="#BDBDBD"
+            android:background="#ececec"
             android:visibility="gone"
             android:fitsSystemWindows="true"
             />

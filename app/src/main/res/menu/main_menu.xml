@@ -7,6 +7,7 @@
         android:id="@+id/anketler"
         android:icon="@drawable/survey_icon"
         android:title="@string/item_3"
+        android:itemBackground="#000"
         app:showAsAction="ifRoom"
 
         />

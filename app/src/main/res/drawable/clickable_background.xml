@@ -6,6 +6,11 @@
 
     <shape android:shape="oval">
             <solid android:color="#145b5b5b" />
+        <padding android:bottom="3dp"
+            android:top="3dp"
+            android:right="3dp"
+            android:left="3dp"
+            />
 
     </shape>
 
