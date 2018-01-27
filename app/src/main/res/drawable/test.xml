@@ -1,0 +1,17 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+
+        <shape android:shape="rectangle" android:padding="10dp">
+            <corners
+                android:radius="100dp"/>
+            <solid
+                android:color="#37c1c1c1" >
+            </solid>
+        </shape>
+
+    </item>
+    <item android:drawable="@drawable/spin_loader" />
+
+
+
+</layer-list>

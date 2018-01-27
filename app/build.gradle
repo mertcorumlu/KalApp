@@ -38,6 +38,9 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.koushikdutta.ion:ion:2.2.1'
     compile 'com.github.arimorty:floatingsearchview:2.1.1'
+    compile 'com.theartofdev.edmodo:android-image-cropper:2.6.+'
+    compile 'com.makeramen:roundedimageview:2.3.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
 
 

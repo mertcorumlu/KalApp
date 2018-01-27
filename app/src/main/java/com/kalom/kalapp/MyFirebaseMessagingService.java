@@ -57,16 +57,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
     private void sendNotification(String messageBody,String messageTitle) {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
-
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationChannel notifychannel=new NotificationChannel("DEFAULT","OM",NotificationManager.IMPORTANCE_MAX);
+            NotificationChannel notifychannel=new NotificationChannel("DEFAULT","OM",NotificationManager.IMPORTANCE_DEFAULT);
             notifychannel.canShowBadge();
             notifychannel.setShowBadge(true);
             notifychannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
@@ -83,8 +78,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         .setContentTitle(messageTitle)
                         .setContentText(messageBody)
                         .setAutoCancel(true)
-                        .setSound(defaultSoundUri)
-                        .setContentIntent(pendingIntent);
+                        .setSound(defaultSoundUri);
 
 
 

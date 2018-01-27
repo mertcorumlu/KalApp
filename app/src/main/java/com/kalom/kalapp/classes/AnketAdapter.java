@@ -1,6 +1,6 @@
 package com.kalom.kalapp.classes;
 
-import android.content.Context;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
@@ -17,8 +17,6 @@ import android.widget.TextView;
 
 import com.kalom.kalapp.AnketWebviewActivity;
 import com.kalom.kalapp.R;
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
 
 import java.util.List;
 
@@ -29,16 +27,15 @@ public class AnketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
+    private final int VIEW_TYPE_NOTFOUND =2;
 
     private OnLoadMoreListener mOnLoadMoreListener;
 
     private boolean isLoading;
     private int lastVisibleItem, totalItemCount,visibleCount;
 
-    private Context mCon;
+    public AnketAdapter(List<Anket> uyeler,RecyclerView mRecyclerView) {
 
-    public AnketAdapter(List<Anket> uyeler,RecyclerView mRecyclerView,Context con) {
-        mCon=con;
 
         final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -67,8 +64,6 @@ public class AnketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                                           }
 
-
-
         );
 
 
@@ -83,6 +78,9 @@ public class AnketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         } else if (viewType == VIEW_TYPE_LOADING) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_footer, parent, false);
             return new LoadingViewHolder(view);
+        }else if (viewType == VIEW_TYPE_NOTFOUND) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_footer_error, parent, false);
+            return new ErrorViewHolder(view);
         }
         return null;
     }
@@ -127,6 +125,12 @@ public class AnketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             loadingViewHolder.draw = (AnimationDrawable) loadingViewHolder.progressBar.getBackground();
             loadingViewHolder.draw.start();
         }
+        else if (out instanceof ErrorViewHolder) {
+            Anket anket = anketlerList.get(position);
+            ErrorViewHolder errorViewHolder = (ErrorViewHolder) out;
+            errorViewHolder.text.setText(anket.getBaslik());
+            isLoading=true;
+        }
 
 
 
@@ -139,7 +143,14 @@ public class AnketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemViewType(int position) {
-        return anketlerList.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+        if(anketlerList.get(position) == null){
+            return VIEW_TYPE_LOADING;
+        }else if(anketlerList.get(position).getID() == 0){
+            return VIEW_TYPE_NOTFOUND;
+        }else{
+            return VIEW_TYPE_ITEM;
+        }
+
     }
 
     static class AnketHolder extends ViewHolder {
@@ -174,6 +185,15 @@ public class AnketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         public LoadingViewHolder(View itemView) {
             super(itemView);
             progressBar =  itemView.findViewById(R.id.login_progress);
+        }
+    }
+
+    static class ErrorViewHolder extends ViewHolder {
+        public TextView text;
+
+        public ErrorViewHolder(View itemView) {
+            super(itemView);
+            text = itemView.findViewById(R.id.error_text);
         }
     }
 

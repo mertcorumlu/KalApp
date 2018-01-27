@@ -3,7 +3,6 @@ package com.kalom.kalapp;
 
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,7 +24,6 @@ import com.kalom.kalapp.classes.Config;
 import com.kalom.kalapp.classes.JSONParser;
 import com.kalom.kalapp.classes.OnLoadMoreListener;
 import com.kalom.kalapp.classes.SessionManager;
-import com.kalom.kalapp.fragments.DuyuruFragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -45,7 +43,6 @@ public class AnketActivity extends AppCompatActivity {
     private AnketInfo us;
     private RecyclerView listemiz;
     private SwipeRefreshLayout swip;
-    private PopupMenu popupMenu;
     private JSONArray yazarlar;
     private String searchQuery;
 
@@ -60,6 +57,9 @@ public class AnketActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Config.check_login(this);
+
         setContentView(R.layout.anket_layout);
         session = new SessionManager(getApplicationContext());
 
@@ -87,7 +87,7 @@ public class AnketActivity extends AppCompatActivity {
 
 
             listemiz.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-            adapter=new AnketAdapter(anketler, listemiz,getApplicationContext());
+            adapter=new AnketAdapter(anketler, listemiz);
             listemiz.setAdapter(adapter);
 
 
@@ -183,7 +183,6 @@ public class AnketActivity extends AppCompatActivity {
 
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -198,7 +197,7 @@ public class AnketActivity extends AppCompatActivity {
 
             case R.id.filter:
 
-                popupMenu = new PopupMenu(this,this.findViewById(R.id.filter));
+                PopupMenu popupMenu = new PopupMenu(this, this.findViewById(R.id.filter));
                 popupMenu.getMenu().add("Tümü");
 
 
@@ -262,7 +261,6 @@ public class AnketActivity extends AppCompatActivity {
         return true;
     }
 
-
     public void refresh(){
         anketler.clear();
         adapter.notifyDataSetChanged();
@@ -292,13 +290,17 @@ public class AnketActivity extends AppCompatActivity {
 
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.ECLAIR)
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Config.check_login(this);
     }
 
     @Subscribe
@@ -447,6 +449,7 @@ public class AnketActivity extends AppCompatActivity {
                 JSONArray ar = new JSONArray(result);
 
                 if(ar.length()!=0) {
+
                     for (int i = 0; i < ar.length(); ++i) {
                         try {
                             JSONObject obj = (JSONObject) ar.get(i);

@@ -24,6 +24,7 @@ public class DuyuruAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
+    private final int VIEW_TYPE_NOTFOUND =2;
 
     private OnLoadMoreListener mOnLoadMoreListener;
 
@@ -33,9 +34,8 @@ public class DuyuruAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public DuyuruAdapter(List<Duyuru> uyeler,RecyclerView mRecyclerView) {
 
         final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
-
             @Override
             public void onScrolled(RecyclerView recyclerView, int newState , int b) {
 
@@ -53,10 +53,6 @@ public class DuyuruAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 }
             }
 
-
-
-
-
         }
 
         );
@@ -66,19 +62,23 @@ public class DuyuruAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         if (viewType == VIEW_TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.duyurulist_layout, parent, false);
             return new DuyuruHolder(view);
         } else if (viewType == VIEW_TYPE_LOADING) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_footer, parent, false);
             return new LoadingViewHolder(view);
+        }else if (viewType == VIEW_TYPE_NOTFOUND) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_footer_error, parent, false);
+            return new ErrorViewHolder(view);
         }
         return null;
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder out, int position) {
+    public void onBindViewHolder(final ViewHolder out, int position) {
 
         if (out instanceof DuyuruHolder) {
 
@@ -97,8 +97,13 @@ public class DuyuruAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
                 Ion.with(holder.content_image)
                         .error(R.drawable.danger)
-                        .deepZoom()
-                        .load(duyuru.getContentImage());
+                        .load(duyuru.getContentImage())
+                        .setCallback(new FutureCallback<ImageView>() {
+                    @Override
+                    public void onCompleted(Exception e, ImageView result) {
+
+                    }
+                });
 
                 holder.content_image.setVisibility(View.VISIBLE);
 
@@ -123,6 +128,13 @@ public class DuyuruAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             loadingViewHolder.draw .start();
         }
 
+        else if (out instanceof ErrorViewHolder) {
+            Duyuru duyuru = duyuruList.get(position);
+            ErrorViewHolder errorViewHolder = (ErrorViewHolder) out;
+            errorViewHolder.text.setText(duyuru.getIcerik());
+            isLoading=true;
+        }
+
 
 
     }
@@ -134,7 +146,14 @@ public class DuyuruAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemViewType(int position) {
-        return duyuruList.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+        if(duyuruList.get(position) == null){
+            return VIEW_TYPE_LOADING;
+        }else if(duyuruList.get(position).getID() == 0){
+            return VIEW_TYPE_NOTFOUND;
+        }else{
+            return VIEW_TYPE_ITEM;
+        }
+
     }
 
     static class DuyuruHolder extends ViewHolder {
@@ -143,9 +162,10 @@ public class DuyuruAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         public final TextView yazar;
         public final TextView content;
         public final TextView date;
-        public final ImageView yazar_image;
         public final ImageView content_image;
-        AnimationDrawable animationDrawable;
+        public final ImageView yazar_image;
+
+
 
 
         public DuyuruHolder(final View view) {
@@ -167,6 +187,15 @@ public class DuyuruAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         public LoadingViewHolder(View itemView) {
             super(itemView);
             progressBar =  itemView.findViewById(R.id.login_progress);
+        }
+    }
+
+    static class ErrorViewHolder extends ViewHolder {
+        public TextView text;
+
+        public ErrorViewHolder(View itemView) {
+            super(itemView);
+            text = itemView.findViewById(R.id.error_text);
         }
     }
 

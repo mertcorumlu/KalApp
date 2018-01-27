@@ -24,7 +24,7 @@
         android:src="@drawable/loader"
         android:layout_gravity="center"
         android:visibility="gone"
-        android:contentDescription="LOADER_IMAGE" />
+        android:contentDescription="@string/loader_description" />
 
     </FrameLayout>
 
@@ -48,7 +48,7 @@
                 android:src="@mipmap/marti"
                 android:layout_gravity="center"
                 android:layout_marginBottom="75dp"
-                android:contentDescription="KALAPP_MARTI" />
+                android:contentDescription="@string/giris_logo_description" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -58,11 +58,11 @@
                     android:id="@+id/okul_no"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="123123"
+                    android:hint="@string/okul_no_hint"
                     android:inputType="number"
                     android:maxLines="1"
                     android:singleLine="true"
-                    tools:targetApi="cupcake" />
+                    />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -74,7 +74,7 @@
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Şifre"
+                    android:hint="@string/şifre_hint"
                     android:imeActionId="1"
                     android:imeActionLabel="password"
                     android:imeOptions="actionUnspecified"
@@ -86,14 +86,15 @@
             </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:id="@+id/email_sign_in_button"
+                android:id="@+id/giris_yap_buton"
                 style="?android:textAppearanceSmall"
                 android:layout_width="250dp"
                 android:layout_gravity="center"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/login_button"
-                android:text="Giriş Yap"
+                android:text="@string/giris_yap_hint"
+                android:textAllCaps="false"
                 android:textColor="#fff"
                 android:textStyle="bold" />
 

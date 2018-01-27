@@ -5,16 +5,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.kalom.kalapp.MainPage">
+    tools:context="com.kalom.kalapp.MainActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/toolbar_background"
+        android:padding="3dp"
         >
 
+        <ImageView
+            android:id="@+id/toolbar_title"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:padding="3dp"
+            android:layout_gravity="center_vertical|start"
+            android:layout_marginLeft="14dp"
+            android:layout_marginStart="14dp"
+            app:srcCompat="@mipmap/marti" />
+
     </android.support.v7.widget.Toolbar>
+
+
 
 
     <FrameLayout
@@ -28,28 +44,16 @@
         android:background="@color/duyuru_background">
 
     </FrameLayout>
-
-    <ImageView
-        android:id="@+id/toolbar_title"
-        android:layout_width="53dp"
-        android:layout_height="53dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:padding="7dp"
-        android:layout_gravity="center"
-        android:layout_marginLeft="14dp"
-        android:layout_marginStart="14dp"
-        app:srcCompat="@mipmap/marti" />
-
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/toolbar_title"
+        android:layout_below="@+id/toolbar"
         android:background="@drawable/toolbar_background" />
+
+
 
 <!--
     <android.support.design.widget.BottomNavigationView

@@ -1,0 +1,409 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@color/toolbar_background"
+        app:title="Profil"
+        />
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@drawable/toolbar_background" />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <RelativeLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/section1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/duyuru_background"
+
+
+                >
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="15dp"
+                        tools:ignore="UseCompoundDrawables">
+
+                        <com.makeramen.roundedimageview.RoundedImageView
+                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/profile_img"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:src="@mipmap/marti"
+                            android:layout_gravity="center"
+                            android:layout_margin="10dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            app:riv_oval="true"
+                            android:background="@drawable/sel"
+                            />
+
+                        <TextView
+                            android:id="@+id/change_profile_img"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Profil Fotoğrafını Değiştir"
+                            android:textColor="#2E87EE"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="@drawable/sel"
+                            />
+
+
+                    </LinearLayout>
+
+
+            </RelativeLayout>
+
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/section2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/duyuru_background"
+                android:paddingTop="20dp"
+                android:paddingLeft="13dp"
+                android:paddingRight="13dp"
+                android:paddingBottom="20dp"
+                android:orientation="vertical"
+
+                >
+
+                    <LinearLayout
+                        android:id="@+id/layout_eposta"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="5dp"
+                        >
+
+                        <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            app:srcCompat="@drawable/close_envelope"
+                            android:layout_gravity="center"
+                            />
+
+                        <TextView
+                            android:id="@+id/label_eposta"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="E-posta: "
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            />
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="öncekimail@kalapp.com"
+                            android:inputType="textEmailAddress"
+                            android:background="@android:color/transparent"
+                            android:textAlignment="center"
+                            android:windowSoftInputMode="stateHidden"
+                            />
+
+
+
+                    </LinearLayout>
+
+                         <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="2dp"
+                        android:paddingBottom="2dp"
+                        android:layout_marginLeft="43dp"
+                        android:layout_marginStart="43dp"
+                        android:background="#7b7a7a"
+                        android:layout_marginBottom="15dp"
+                            />
+
+                    <LinearLayout
+                    android:id="@+id/layout_telefon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    >
+
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        app:srcCompat="@drawable/phone_receiver"
+                        android:layout_gravity="center"
+                        />
+
+                    <TextView
+                        android:id="@+id/label_telefon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="Telefon: "
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="Telefon No"
+                        android:inputType="number"
+                        android:background="@android:color/transparent"
+                        android:textAlignment="center"
+                        android:windowSoftInputMode="stateHidden"
+                        />
+
+
+
+                </LinearLayout>
+
+                         <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dp"
+                    android:paddingBottom="2dp"
+                    android:layout_marginLeft="43dp"
+                    android:layout_marginStart="43dp"
+                    android:background="#7b7a7a"
+                    android:layout_marginBottom="15dp"
+                    />
+
+                    <LinearLayout
+                        android:id="@+id/layout_sifre"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="5dp"
+                        >
+
+                        <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            app:srcCompat="@drawable/lock"
+                            android:layout_gravity="center"
+                            />
+
+                        <TextView
+                            android:id="@+id/label_sifre"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="Şifre: "
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            />
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="Şifre"
+                            android:inputType="textPassword"
+                            android:background="@android:color/transparent"
+                            android:textAlignment="center"
+                            android:windowSoftInputMode="stateHidden"
+                            />
+
+
+
+                    </LinearLayout>
+
+                         <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="2dp"
+                        android:paddingBottom="2dp"
+                        android:layout_marginLeft="43dp"
+                        android:layout_marginStart="43dp"
+                        android:background="#7b7a7a"
+                        android:layout_marginBottom="15dp"
+                        />
+
+
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/section3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/duyuru_background"
+                android:paddingTop="20dp"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:paddingBottom="30dp"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Uygulama Ayarları"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:padding="8dp"
+                    />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dp"
+                    android:paddingBottom="2dp"
+                    android:background="#2b2b2b"
+                    android:layout_marginBottom="15dp"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                        <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            app:srcCompat="@drawable/shield_with_lock"
+                            android:layout_gravity="center"
+                            />
+
+                    <TextView
+                        android:id="@+id/label_gizlilik"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|start"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
+                        android:text="Gizlilik: "
+                        android:textSize="19sp"
+                        android:textStyle="normal"
+                        android:layout_weight="1.0"
+                         />
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        app:srcCompat="@drawable/right_arrow"
+                        android:layout_gravity="center"
+                        android:tint="#757575"
+                        />
+
+
+                </LinearLayout>
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginLeft="43dp"
+                    android:layout_marginStart="43dp"
+                    android:background="#7b7a7a"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginBottom="7dp"
+
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        app:srcCompat="@drawable/notification"
+                        />
+                    <TextView
+                        android:id="@+id/label_bildirim_ayarlari"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="Bildirim Ayarları: "
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
+                        android:textSize="19sp"
+                        android:textStyle="normal"
+                        android:gravity="center_vertical|start"
+                        android:layout_weight="1.0"
+                        />
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        app:srcCompat="@drawable/right_arrow"
+                        android:layout_gravity="center"
+                        android:tint="#757575"
+                        />
+
+
+                </LinearLayout>
+
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/section4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/duyuru_background"
+                android:paddingTop="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="20dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="10dp">
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    app:srcCompat="@drawable/sign_out_option"
+                    android:layout_gravity="center"
+                    />
+                <TextView
+                    android:id="@+id/label_cikis_yap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Çıkış Yap"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:textSize="19sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textColor="#f72e2e"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+
+
+</LinearLayout>

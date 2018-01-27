@@ -10,10 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.LoaderManager.LoaderCallbacks;
 
-import android.content.Loader;
-import android.database.Cursor;
 import android.os.AsyncTask;
 
 import android.os.Build;
@@ -23,7 +20,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,7 +27,6 @@ import android.widget.TextView;
 import android.view.WindowManager;
 
 import java.io.IOException;
-import java.util.List;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.kalom.kalapp.classes.Config;
@@ -45,24 +40,13 @@ import com.kalom.kalapp.classes.SessionManager;
 import	android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-/**
- * A login screen that offers login via email/password.
- */
-public class Login_Activity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
-
-    /*
-      Id to identity READ_CONTACTS permission request.
-     */
-   // private static final int REQUEST_READ_CONTACTS = 0;
+public class Login_Activity extends AppCompatActivity {
 
 
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
     private UserLoginTask mAuthTask = null;
 
-    // UI references.
-    private AutoCompleteTextView mEmailView;
+    // UI
+    private AutoCompleteTextView mOkulnoView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
@@ -70,34 +54,32 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_login);
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
-
-
-
         // Set up the login form.
-        mEmailView = findViewById(R.id.okul_no);
-        populateAutoComplete();
+        mOkulnoView = findViewById(R.id.okul_no);
 
         mPasswordView = findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == 1 || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    giris_yap();
                     return true;
                 }
                 return false;
             }
         });
 
-        Button mEmailSignInButton = findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        Button mGirisYapButon = findViewById(R.id.giris_yap_buton);
+        mGirisYapButon.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 hideSoftKeyboard();
-                attemptLogin();
+                giris_yap();
             }
         });
 
@@ -105,27 +87,18 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
         mProgressView = findViewById(R.id.login_progress);
     }
 
-    private void populateAutoComplete() {
-        getLoaderManager().initLoader(0, null, this);
-    }
+    private void giris_yap() {
 
-
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
-    private void attemptLogin() {
         if (mAuthTask != null) {
             return;
         }
 
         // Reset errors.
-        mEmailView.setError(null);
+        mOkulnoView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        String okulno = mOkulnoView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -138,48 +111,38 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
             cancel = true;
         }
 
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+        // Check for a valid okulno
+        if (TextUtils.isEmpty(okulno)) {
+            mOkulnoView.setError(getString(R.string.error_field_required));
+            focusView = mOkulnoView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_okul_no));
-            focusView = mEmailView;
+        } else if (!isOkulnoValid(okulno)) {
+            mOkulnoView.setError(getString(R.string.error_invalid_okul_no));
+            focusView = mOkulnoView;
             cancel = true;
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
+
             focusView.requestFocus();
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            mAuthTask = new UserLoginTask(okulno, password);
+            mAuthTask.execute();
         }
     }
 
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-       return android.text.TextUtils.isDigitsOnly(email);
+    private boolean isOkulnoValid(String okulno) {
+       return android.text.TextUtils.isDigitsOnly(okulno);
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 6;
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
         int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
         mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
@@ -201,65 +164,6 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
         });
     }
 
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        /*
-        return new CursorLoader(this,
-                // Retrieve data rows for the device user's 'profile' contact.
-                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
-
-                // Select only email addresses.
-                ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                .CONTENT_ITEM_TYPE},
-
-                // Show primary email addresses first. Note that there won't be
-                // a primary email address if the user hasn't specified one.
-                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");*/
-        return null;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        /*
-        List<String> emails = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            emails.add(cursor.getString(ProfileQuery.ADDRESS));
-            cursor.moveToNext();
-        }
-
-        addEmailsToAutoComplete(emails);*/
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
-    }
-
-    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(Login_Activity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-
-        mEmailView.setAdapter(adapter);
-    }
-
-
-    /*
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-       // int IS_PRIMARY = 1;
-    }*/
-
     private void hideSoftKeyboard() {
         if(getCurrentFocus()!=null) {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -269,10 +173,6 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
         }
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
     @SuppressLint("StaticFieldLeak")
     private class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -375,7 +275,6 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
                   Ana Ekrana Yönlendir.
                  */
 
-                    System.out.println("Giriş Yapıldı Yönlendiriliyor.");
                     Intent intent = new Intent(Login_Activity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -388,7 +287,7 @@ public class Login_Activity extends AppCompatActivity implements LoaderCallbacks
 
                     //loaderı gizle
                     showProgress(false);
-                    mEmailView.setError("");
+                    mOkulnoView.setError("");
                     mPasswordView.setError(error);
                     mPasswordView.setText("");
                     mPasswordView.requestFocus();

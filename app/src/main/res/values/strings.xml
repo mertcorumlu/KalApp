@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">KalApp</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -10,9 +8,9 @@
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_okul_no">Hatalı Okul Numarası!</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
+    <string name="error_invalid_password">Şifreniz Çok Kısa.</string>
+    <string name="error_incorrect_password">Hatalı Şifre</string>
+    <string name="error_field_required">Bu Alan Gereklidir.</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
@@ -33,6 +31,11 @@
     <string name="int_yok">Şu Anda Verilerini Yüklemek İçin Sunucuyla Bağlantı Kuramıyoruz.Lütfen İnternet Bağlantını Kontrol Et.</string>
     <string name="filter_icon">Filter_Icon</string>
     <string name="ankete_katil">KATIL</string>
+    <string name="okul_no_hint">Okul No</string>
+    <string name="şifre_hint">Şifre</string>
+    <string name="giris_yap_hint">Giriş Yap</string>
+    <string name="giris_logo_description">KALAPP_MARTI</string>
+    <string name="loader_description">LOADER_IMAGE</string>
 
 
     <item name="visible" type="id"/>
