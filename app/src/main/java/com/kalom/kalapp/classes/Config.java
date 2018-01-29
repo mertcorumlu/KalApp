@@ -14,9 +14,9 @@ public class Config {
 
     public static final String api_server= "http://192.168.1.148/";
 
-        /*
-         * DUYURU AYAR
-         */
+    /*
+     * DUYURU AYAR
+     */
     public static final int duyuru_load_one_time =5;
     public static int duyuru_max_uzunluk=50;
 
@@ -111,8 +111,10 @@ public class Config {
                 AlertDialog alert11 = builder1.create();
                 alert11.show();
 
-            return null;
+                return null;
             }
+
+            info.put("hash",session.getToken());
 
             return info;
 

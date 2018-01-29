@@ -1,24 +1,34 @@
 package com.kalom.kalapp;
 
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 
 import com.kalom.kalapp.classes.Config;
+import com.kalom.kalapp.classes.JSONParser;
+import com.kalom.kalapp.classes.SessionManager;
 import com.kalom.kalapp.fragments.DuyuruFragment;
 import com.koushikdutta.ion.Ion;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 
 public  class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -30,21 +40,21 @@ public  class MainActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        userInfo = Config.check_login(this);
-
         //API 19 İçin Vector Background Eklentisi
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
+
+        userInfo = Config.check_login(this);
+
+
 
         setContentView(R.layout.mainactivity_layout);
 
         ImageView anketImage = findViewById(R.id.anket_image);
         profileImage = findViewById(R.id.profile_img);
 
-        load_profile_img();
-
         anketImage.setOnClickListener(this);
         profileImage.setOnClickListener(this);
-
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -75,6 +85,7 @@ public  class MainActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.anket_image:
                 Intent intentAnket = new Intent(this, AnketActivity.class);
+                intentAnket.putExtra("user_info",userInfo.toString());
                 this.startActivity(intentAnket);
                 break;
 
@@ -103,3 +114,4 @@ public  class MainActivity extends AppCompatActivity implements View.OnClickList
     }
 
 }
+

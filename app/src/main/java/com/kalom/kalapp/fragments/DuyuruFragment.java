@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -455,8 +456,6 @@ public class DuyuruFragment extends Fragment {
 
         @Override
         protected String doInBackground(Void... params) {
-
-
 
             // Simulate network access.
             JSONParser js=new JSONParser();

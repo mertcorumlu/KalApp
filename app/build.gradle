@@ -41,6 +41,7 @@ dependencies {
     compile 'com.theartofdev.edmodo:android-image-cropper:2.6.+'
     compile 'com.makeramen:roundedimageview:2.3.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.github.yesterselga:password-strength-checker-android:v1.0'
 }
 
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.kalom.kalapp"
     android:versionCode="1"
     android:versionName="1.0">
@@ -26,7 +27,7 @@
         android:supportsRtl="true"
         android:hardwareAccelerated="true"
         android:theme="@style/AppTheme.NoActionBar"
-        android:allowBackup="false"
+        tools:replace="android:label"
         >
 
         <activity
@@ -58,7 +59,9 @@
 
         <activity
             android:screenOrientation="portrait"
-            android:name=".ProfilActivity">
+            android:name=".ProfilActivity"
+            android:windowSoftInputMode="adjustResize"
+            >
         </activity>
 
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
