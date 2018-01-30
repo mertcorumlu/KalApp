@@ -3,11 +3,15 @@ package com.kalom.kalapp;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +28,7 @@ import com.kalom.kalapp.classes.Config;
 import com.kalom.kalapp.classes.JSONParser;
 import com.kalom.kalapp.classes.OnLoadMoreListener;
 import com.kalom.kalapp.classes.SessionManager;
+import com.koushikdutta.ion.Ion;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -58,7 +63,6 @@ public class AnketActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Config.check_login(this);
 
         setContentView(R.layout.anket_layout);
         session = new SessionManager(getApplicationContext());
@@ -73,7 +77,6 @@ public class AnketActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle("Anketler");
-
 
         if(!EventBus.getDefault().isRegistered(this)){
             EventBus.getDefault().register(this);
@@ -176,8 +179,6 @@ public class AnketActivity extends AppCompatActivity {
 
 
         }.execute();
-
-
 
 
 
@@ -300,7 +301,8 @@ public class AnketActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Config.check_login(this);
+
+        new UserInfo(this).execute();
     }
 
     @Subscribe
@@ -487,6 +489,153 @@ public class AnketActivity extends AppCompatActivity {
 
 
 
+
+
+
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public class UserInfo extends AsyncTask<Void, String,JSONObject> {
+        /**
+         * Bu class sunucudan verileri çeker.Async Task olarak kodlanmıştır.
+         * Parametre olarak login hash alması gerekir.
+         * bağlantı kuramazsa null döndürür
+         */
+
+        private Context mContext;
+        private String hash;
+        private SessionManager session;
+
+        public UserInfo(Context mContext){
+
+            this.mContext = mContext;
+
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            Log.d("TEST","ISTEK GONDERILDI");
+
+            //Shared Preferences İçinde Tutulacak Olan Login Hash İçin Kütüphane
+            session = new SessionManager(mContext);
+
+        /*
+         Eğer Login Hash Kayıtlı Değilse Daha Önce Hiç Giriş Yapılmamıştır.
+          Bu Durumda Login Ekranına Yönlendir.
+          ------------------------------------------------------------------
+         */
+            if(session.getToken()==null){
+                this.cancel(true);
+                Intent intent = new Intent(mContext, Login_Activity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            hash = session.getToken();
+
+
+        }
+
+        @Override
+        protected JSONObject doInBackground(Void... params) {
+
+            // yeni bir json parser değişkeni
+            JSONParser js=new JSONParser();
+
+            try{
+                //login kontrol etmek için sunucuya yapılması gereken istek
+                String api_call= Config.api_server+"?action=user_info&hash="+hash;
+
+                //JSONParser kütüphanesi ile sunucuya istek yollanır.
+                //Yanıt olarak JSONObject döner
+                return js.readJson(api_call);
+
+            }catch(IOException | JSONException e){
+                /*
+                 Eğer Sunucuya Ulaşılamadıysa, Bir Alert Dialog Oluştur ve Kullanıcıyı Bilgilendir.
+                */
+
+                e.printStackTrace();
+
+
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
+                builder1.setMessage("Sunuculara Erişilemiyor.Lütfen Bağlantınızı Kontrol Edip Tekrar Deneyiniz.");
+                builder1.setCancelable(true);
+
+                builder1.setPositiveButton(
+                        "Tamam",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                finish();
+                                System.exit(0);
+                            }
+                        });
+
+
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
+
+
+                return null;
+
+            }
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject info) {
+            super.onPostExecute(info);
+
+            Log.d("TEST","CEVAP GELDI");
+
+
+                /*
+                 Suncudan Gelen Verileri Kontrol Et.
+                 Eğer Sunucu Login Hashi Onaylamışsa Ana Ekrana Yönlendir.
+                  Eğer Login Hashin Süresi Dolmuşsa Oturumu Zaman Aşımına Uğrat.Logine Yönlendir.
+                 */
+            try {
+                if(!info.get("valid").equals(true)){
+                    session.editor.clear().commit();
+
+
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
+                    builder1.setMessage("Başka Bir Cihazdan Giriş Yaptığın İçin Bu Oturumuna Kısa Bir Ara Veriyoruz :)");
+                    builder1.setCancelable(true);
+
+                    builder1.setPositiveButton(
+                            "Tamam",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent intent = new Intent(mContext, Login_Activity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            });
+
+
+
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
+
+                }else{
+
+
+
+
+                }
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+
+        }
 
 
 

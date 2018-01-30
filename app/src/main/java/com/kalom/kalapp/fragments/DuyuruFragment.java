@@ -4,6 +4,7 @@ package com.kalom.kalapp.fragments;
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -75,7 +76,7 @@ public class DuyuruFragment extends Fragment {
 
     @SuppressLint("StaticFieldLeak")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
          final View rootView = inflater.inflate(R.layout.duyurufragment_layout,

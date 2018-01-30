@@ -142,7 +142,8 @@
                             android:inputType="textEmailAddress"
                             android:background="@android:color/transparent"
                             android:textAlignment="center"
-                            android:windowSoftInputMode="stateHidden"
+                            android:imeOptions="actionDone"
+
                             />
 
 
@@ -206,7 +207,8 @@
                         android:inputType="number"
                         android:background="@android:color/transparent"
                         android:textAlignment="center"
-                        android:windowSoftInputMode="stateHidden"
+                        android:imeOptions="actionDone"
+
                         />
 
 
@@ -396,7 +398,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/section4"
+                android:id="@+id/cikis_yap"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -406,7 +408,10 @@
                 android:paddingRight="10dp"
                 android:paddingBottom="20dp"
                 android:paddingStart="20dp"
-                android:paddingEnd="10dp">
+                android:paddingEnd="10dp"
+                android:clickable="true"
+                android:focusable="true"
+                >
                 <ImageView
                     android:layout_width="35dp"
                     android:layout_height="35dp"
@@ -424,7 +429,7 @@
                     android:textStyle="bold"
                     android:gravity="center"
                     android:textColor="#f72e2e"
-                    />
+                     />
 
             </LinearLayout>
 

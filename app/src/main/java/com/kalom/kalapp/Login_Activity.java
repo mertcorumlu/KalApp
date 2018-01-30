@@ -3,6 +3,8 @@ package com.kalom.kalapp;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -66,7 +68,7 @@ public class Login_Activity extends AppCompatActivity {
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == 1 || id == EditorInfo.IME_NULL) {
+                if (id == 1 || id == EditorInfo.IME_ACTION_DONE) {
                     giris_yap();
                     return true;
                 }
@@ -78,7 +80,6 @@ public class Login_Activity extends AppCompatActivity {
         mGirisYapButon.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                hideSoftKeyboard();
                 giris_yap();
             }
         });
@@ -88,6 +89,7 @@ public class Login_Activity extends AppCompatActivity {
     }
 
     private void giris_yap() {
+        hideSoftKeyboard();
 
         if (mAuthTask != null) {
             return;
@@ -104,12 +106,8 @@ public class Login_Activity extends AppCompatActivity {
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
+
+
 
         // Check for a valid okulno
         if (TextUtils.isEmpty(okulno)) {
@@ -119,6 +117,17 @@ public class Login_Activity extends AppCompatActivity {
         } else if (!isOkulnoValid(okulno)) {
             mOkulnoView.setError(getString(R.string.error_invalid_okul_no));
             focusView = mOkulnoView;
+            cancel = true;
+        }
+
+        // Check for a valid Password
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        } else if (!isPasswordValid(password)) {
+            mPasswordView.setError(getString(R.string.error_invalid_password));
+            focusView = mPasswordView;
             cancel = true;
         }
 
@@ -155,6 +164,9 @@ public class Login_Activity extends AppCompatActivity {
         });
 
         mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        mProgressView.setBackgroundResource(R.drawable.loader);
+        AnimationDrawable draw=(AnimationDrawable) mProgressView.getBackground();
+        draw.start();
         mProgressView.animate().setDuration(shortAnimTime).alpha(
                 show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
             @Override

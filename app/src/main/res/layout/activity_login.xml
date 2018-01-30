@@ -19,11 +19,11 @@
     <ImageView
         android:id="@+id/login_progress"
         style="?android:attr/progressBarStyleLarge"
-        android:layout_width="93dp"
-        android:layout_height="101dp"
-        android:src="@drawable/loader"
+        android:layout_width="100dp"
+        android:layout_height="70dp"
+        android:src="@android:color/transparent"
         android:layout_gravity="center"
-        android:visibility="gone"
+        android:visibility="visible"
         android:contentDescription="@string/loader_description" />
 
     </FrameLayout>
@@ -77,11 +77,11 @@
                     android:hint="@string/şifre_hint"
                     android:imeActionId="1"
                     android:imeActionLabel="password"
-                    android:imeOptions="actionUnspecified"
+                    android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:singleLine="true"
-                    tools:targetApi="cupcake" />
+                     />
 
             </android.support.design.widget.TextInputLayout>
 

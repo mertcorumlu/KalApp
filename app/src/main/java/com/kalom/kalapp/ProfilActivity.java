@@ -3,6 +3,8 @@ package com.kalom.kalapp;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -12,15 +14,19 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -62,12 +68,12 @@ import java.util.ArrayList;
 
 
 
-public class ProfilActivity extends AppCompatActivity implements View.OnClickListener {
+public class ProfilActivity extends AppCompatActivity implements View.OnClickListener,TextView.OnEditorActionListener {
 
     private RoundedImageView profileImage;
     private TextView changeProfileImage;
     private JSONObject userInfo;
-    private LinearLayout buttonSifre;
+    private LinearLayout buttonSifre,cikisYap;
     boolean isCurrentOK = false,
             isNewOK = false,
             isRepeatOK= false;
@@ -99,9 +105,11 @@ public class ProfilActivity extends AppCompatActivity implements View.OnClickLis
         changeProfileImage.setOnClickListener(this);
         buttonSifre.setOnClickListener(this);
 
-
         email = findViewById(R.id.change_email);
         telefon = findViewById(R.id.change_telefon);
+
+        email.setOnEditorActionListener(this);
+        telefon.setOnEditorActionListener(this);
 
         email.addTextChangedListener(new TextWatcher() {
             @Override
@@ -116,11 +124,15 @@ public class ProfilActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                View emailSeperator = findViewById(R.id.email_seperator);
-                if(isValidEmail(s)){
-                    emailSeperator.setBackgroundColor(Color.GREEN);
-                }else{
-                    emailSeperator.setBackgroundColor(Color.RED);
+                if(getCurrentFocus() == telefon) {
+
+                    View emailSeperator = findViewById(R.id.email_seperator);
+                    if (isValidEmail(s)) {
+                        emailSeperator.setBackgroundColor(Color.GREEN);
+                    } else {
+                        emailSeperator.setBackgroundColor(Color.RED);
+                    }
+
                 }
 
             }
@@ -169,11 +181,17 @@ public class ProfilActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+                if(getCurrentFocus() == telefon){
+
+
                 View telefonSeperator = findViewById(R.id.telefon_seperator);
                 if(isValidTelefon(s)){
                     telefonSeperator.setBackgroundColor(Color.GREEN);
                 }else{
                     telefonSeperator.setBackgroundColor(Color.RED);
+                }
+
+
                 }
 
             }
@@ -209,25 +227,19 @@ public class ProfilActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-        Intent intent = getIntent();
-        try {
-            userInfo = new JSONObject(intent.getStringExtra("user_info"));
-            hash = userInfo.get("hash").toString();
-            if(!userInfo.get("img_url").toString().equals("null")) {
-                Ion.with(profileImage)
-                        .load(userInfo.get("img_url").toString());
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
+        cikisYap = findViewById(R.id.cikis_yap);
+        cikisYap.setOnClickListener(this);
 
-
+        hash = new SessionManager(this).getToken();
 
     }
 
     @Override
     public void onClick(View v) {
+
+        InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
         switch (v.getId()){
 
@@ -250,9 +262,25 @@ public class ProfilActivity extends AppCompatActivity implements View.OnClickLis
                 sifre_dialog();
                 break;
 
+            case R.id.cikis_yap:
+                new SessionManager(this).logoutUser();
+                break;
+
 
         }
 
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+            InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            email.clearFocus();
+            telefon.clearFocus();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -284,6 +312,7 @@ public class ProfilActivity extends AppCompatActivity implements View.OnClickLis
     protected void onResume() {
         super.onResume();
 
+        new UserInfo(this).execute();
 
     }
 
@@ -518,7 +547,6 @@ public class ProfilActivity extends AppCompatActivity implements View.OnClickLis
         return target.toString().matches("^05[0-9]{9}$");
     }
 
-
     @SuppressLint("StaticFieldLeak")
     private class UploadImage extends AsyncTask<Void,Void,String>{
 
@@ -685,6 +713,168 @@ public class ProfilActivity extends AppCompatActivity implements View.OnClickLis
                 e.printStackTrace();
             }
         }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public class UserInfo extends AsyncTask<Void, String,JSONObject> {
+        /**
+         * Bu class sunucudan verileri çeker.Async Task olarak kodlanmıştır.
+         * Parametre olarak login hash alması gerekir.
+         * bağlantı kuramazsa null döndürür
+         */
+
+        private Context mContext;
+        private String hash;
+        private SessionManager session;
+
+        public UserInfo(Context mContext){
+
+            this.mContext = mContext;
+
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //Log.d("TEST","ISTEK GONDERILDI");
+
+            //Shared Preferences İçinde Tutulacak Olan Login Hash İçin Kütüphane
+            session = new SessionManager(mContext);
+
+        /*
+         Eğer Login Hash Kayıtlı Değilse Daha Önce Hiç Giriş Yapılmamıştır.
+          Bu Durumda Login Ekranına Yönlendir.
+          ------------------------------------------------------------------
+         */
+            if(session.getToken()==null){
+                this.cancel(true);
+                Intent intent = new Intent(mContext, Login_Activity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            hash = session.getToken();
+
+
+        }
+
+        @Override
+        protected JSONObject doInBackground(Void... params) {
+
+            // yeni bir json parser değişkeni
+            JSONParser js=new JSONParser();
+
+            try{
+                //login kontrol etmek için sunucuya yapılması gereken istek
+                String api_call= Config.api_server+"?action=user_info&hash="+hash;
+
+                //JSONParser kütüphanesi ile sunucuya istek yollanır.
+                //Yanıt olarak JSONObject döner
+                return js.readJson(api_call);
+
+            }catch(IOException | JSONException e){
+                /*
+                 Eğer Sunucuya Ulaşılamadıysa, Bir Alert Dialog Oluştur ve Kullanıcıyı Bilgilendir.
+                */
+
+                e.printStackTrace();
+
+
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
+                builder1.setMessage("Sunuculara Erişilemiyor.Lütfen Bağlantınızı Kontrol Edip Tekrar Deneyiniz.");
+                builder1.setCancelable(true);
+
+                builder1.setPositiveButton(
+                        "Tamam",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                finish();
+                                System.exit(0);
+                            }
+                        });
+
+
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
+
+
+                return null;
+
+            }
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject info) {
+            super.onPostExecute(info);
+
+            //Log.d("TEST","CEVAP GELDI");
+
+
+                /*
+                 Suncudan Gelen Verileri Kontrol Et.
+                 Eğer Sunucu Login Hashi Onaylamışsa Ana Ekrana Yönlendir.
+                  Eğer Login Hashin Süresi Dolmuşsa Oturumu Zaman Aşımına Uğrat.Logine Yönlendir.
+                 */
+            try {
+                if(!info.get("valid").equals(true)){
+                    session.editor.clear().commit();
+
+
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
+                    builder1.setMessage("Başka Bir Cihazdan Giriş Yaptığın İçin Bu Oturumuna Kısa Bir Ara Veriyoruz :)");
+                    builder1.setCancelable(true);
+
+                    builder1.setPositiveButton(
+                            "Tamam",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent intent = new Intent(mContext, Login_Activity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            });
+
+
+
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
+
+                }else{
+
+                    userInfo = info;
+
+                    //UserInfo Kullanan Diğer Fonksiyonları Burada Çağır.
+                    if(!info.get("img_url").toString().equals("null")) {
+                        Ion.with(profileImage)
+                                .load(info.get("img_url").toString());
+                    }
+
+                    if(!info.get("email").toString().equals("null")){
+                        email.setText(info.get("email").toString());
+                    }
+
+                    if(!info.get("telefon").toString().equals("null")){
+                        telefon.setText(info.get("telefon").toString());
+                    }
+
+
+
+                }
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+
+        }
+
+
+
     }
 
 

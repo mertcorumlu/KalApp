@@ -27,7 +27,6 @@ public class AnketWebviewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Config.check_login(this);
         setContentView(R.layout.anket_webview_layout);
 
 
@@ -90,7 +89,6 @@ public class AnketWebviewActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Config.check_login(this);
     }
 
     public void set_loader(){

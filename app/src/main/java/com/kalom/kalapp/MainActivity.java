@@ -2,7 +2,7 @@ package com.kalom.kalapp;
 
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -28,13 +28,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
 
 public  class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private JSONObject userInfo;
     private ImageView profileImage;
+    private int ISTEK_YOLLANDI=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +43,11 @@ public  class MainActivity extends AppCompatActivity implements View.OnClickList
         //API 19 İçin Vector Background Eklentisi
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
-
-        userInfo = Config.check_login(this);
-
-
+        try {
+            userInfo = new UserInfo(this).execute().get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         setContentView(R.layout.mainactivity_layout);
 
@@ -84,15 +85,16 @@ public  class MainActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()) {
 
             case R.id.anket_image:
+
                 Intent intentAnket = new Intent(this, AnketActivity.class);
                 intentAnket.putExtra("user_info",userInfo.toString());
-                this.startActivity(intentAnket);
+                startActivity(intentAnket);
                 break;
 
             case R.id.profile_img:
                 Intent intentProfil = new Intent(this, ProfilActivity.class);
                 intentProfil.putExtra("user_info",userInfo.toString());
-                this.startActivity(intentProfil);
+                startActivity(intentProfil);
                 break;
 
         }
@@ -102,13 +104,169 @@ public  class MainActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onResume(){
         super.onResume();
-        userInfo = Config.check_login(this);
-        load_profile_img();
+
+        if(ISTEK_YOLLANDI==1){
+            new UserInfo(this).execute();
+        }else{
+            ISTEK_YOLLANDI=1;
+        }
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+
+    }
+
+
+    @SuppressLint("StaticFieldLeak")
+    public class UserInfo extends AsyncTask<Void, String,JSONObject> {
+        /**
+         * Bu class sunucudan verileri çeker.Async Task olarak kodlanmıştır.
+         * Parametre olarak login hash alması gerekir.
+         * bağlantı kuramazsa null döndürür
+         */
+
+        private Context mContext;
+        private String hash;
+        private SessionManager session;
+
+        public UserInfo(Context mContext){
+
+            this.mContext = mContext;
+
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            Log.d("TEST","ISTEK GONDERILDI");
+
+            //Shared Preferences İçinde Tutulacak Olan Login Hash İçin Kütüphane
+            session = new SessionManager(mContext);
+
+        /*
+         Eğer Login Hash Kayıtlı Değilse Daha Önce Hiç Giriş Yapılmamıştır.
+          Bu Durumda Login Ekranına Yönlendir.
+          ------------------------------------------------------------------
+         */
+            if(session.getToken()==null){
+                this.cancel(true);
+                Intent intent = new Intent(mContext, Login_Activity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            hash = session.getToken();
+
+
+        }
+
+        @Override
+        protected JSONObject doInBackground(Void... params) {
+
+            // yeni bir json parser değişkeni
+            JSONParser js=new JSONParser();
+
+            try{
+                //login kontrol etmek için sunucuya yapılması gereken istek
+                String api_call= Config.api_server+"?action=user_info&hash="+hash;
+
+                //JSONParser kütüphanesi ile sunucuya istek yollanır.
+                //Yanıt olarak JSONObject döner
+                return js.readJson(api_call);
+
+            }catch(IOException | JSONException e){
+                /*
+                 Eğer Sunucuya Ulaşılamadıysa, Bir Alert Dialog Oluştur ve Kullanıcıyı Bilgilendir.
+                */
+
+                e.printStackTrace();
+
+
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
+                    builder1.setMessage("Sunuculara Erişilemiyor.Lütfen Bağlantınızı Kontrol Edip Tekrar Deneyiniz.");
+                    builder1.setCancelable(true);
+
+                    builder1.setPositiveButton(
+                            "Tamam",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    finish();
+                                    System.exit(0);
+                                }
+                            });
+
+
+
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
+
+
+                return null;
+
+            }
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject info) {
+            super.onPostExecute(info);
+
+            Log.d("TEST","CEVAP GELDI");
+
+
+                /*
+                 Suncudan Gelen Verileri Kontrol Et.
+                 Eğer Sunucu Login Hashi Onaylamışsa Ana Ekrana Yönlendir.
+                  Eğer Login Hashin Süresi Dolmuşsa Oturumu Zaman Aşımına Uğrat.Logine Yönlendir.
+                 */
+            try {
+                if(!info.get("valid").equals(true)){
+                    session.editor.clear().commit();
+
+
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
+                    builder1.setMessage("Başka Bir Cihazdan Giriş Yaptığın İçin Bu Oturumuna Kısa Bir Ara Veriyoruz :)");
+                    builder1.setCancelable(true);
+
+                    builder1.setPositiveButton(
+                            "Tamam",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent intent = new Intent(mContext, Login_Activity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            });
+
+
+
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
+
+                }else{
+
+                    //UserInfo Kullanan Diğer Fonksiyonları Burada Çağır.
+                    userInfo = info;
+
+                    load_profile_img();
+
+
+                }
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+
+        }
+
 
 
     }
